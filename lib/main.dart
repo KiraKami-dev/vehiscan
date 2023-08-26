@@ -7,6 +7,3 @@ void main() async{
   runApp(const MyApp());
     await SharedPrefs().init();
 }
-
-
-
