@@ -9,7 +9,6 @@ import 'package:vehiscan/src/services/utils.dart';
 import 'package:vehiscan/src/utils/global_methods.dart';
 import 'package:vehiscan/src/widgets/appbar.widget.dart';
 
-import '../admin_control.dart/admin_home.dart';
 
 class GuardHome extends StatefulWidget {
   const GuardHome({super.key});
@@ -23,40 +22,7 @@ const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 class _GuardHomeState extends State<GuardHome> {
   String dropdownValue = list.first;
   // void dropDown
-  File? imageCamera;
-  File? imageGallery;
-
-  Future pickImageCamera() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (image == null) {
-        return;
-      } else {
-        final imageTemp = File(image.path);
-        setState(() => imageCamera = imageTemp);
-      }
-
-      // Get.to(()=> )
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
-
-  Future pickImageGallery() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) {
-        return;
-      } else {
-        final imageTemp = File(image.path);
-        setState(() => imageCamera = imageTemp);
-      }
-
-      // Get.to(()=> )
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -91,33 +57,19 @@ class _GuardHomeState extends State<GuardHome> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await GlobalMethod().pickImageCamera();
-                GlobalMethod.imageCamera == null
-                    ? Get.to(const GuardHome())
-                    : Get.to(
-                        () => CheckPlate(
-                          imagePath: GlobalMethod.imageCamera!.path,
-                        ),
-                      );
+                // await GlobalMethod().pickImageCamera();
+                Get.to(()=>CheckPlate());
+                
               },
               child: const Text("Click photo"),
             ),
             ElevatedButton(
               onPressed: () async {
-                await GlobalMethod().pickImageGallery();
-                GlobalMethod.imageGallery == null
-                    ? Get.to(const GuardHome())
-                    : Get.to(
-                        () => CheckPlate(
-                          imagePath: GlobalMethod.imageGallery!.path,
-                        ),
-                      );
-                // Get.to(() => AdminHome());
+                Get.to(()=>CheckPlate());
+
               },
               child: const Text("Camera roll"),
-            ),
-            // imageCamera == null? Container():
-            // Image.file(File(imageCamera!.path)),
+            ),            
           ],
         ),
       ),

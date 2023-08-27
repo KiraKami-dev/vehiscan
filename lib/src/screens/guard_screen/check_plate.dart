@@ -1,6 +1,9 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_scalable_ocr/flutter_scalable_ocr.dart';
 import 'package:get/get.dart';
 import 'package:vehiscan/src/screens/guard_screen/invalid_screen.dart';
 import 'package:vehiscan/src/utils/global_methods.dart';
@@ -9,15 +12,24 @@ import 'package:vehiscan/src/widgets/appbar.widget.dart';
 class CheckPlate extends StatefulWidget {
   CheckPlate({
     super.key,
-    required this.imagePath,
   });
-  String imagePath;
+
   @override
   State<CheckPlate> createState() => _CheckPlateState();
 }
 
 class _CheckPlateState extends State<CheckPlate> {
   bool plateCheck = true;
+  final StreamController<String> controller = StreamController<String>();
+  void setText(value) {
+    controller.add(value);
+  }
+
+  void dispose() {
+    controller.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,13 +48,31 @@ class _CheckPlateState extends State<CheckPlate> {
                     width: 1,
                   ),
                 ),
-                child: widget.imagePath == ""
-                    ? const Center(
-                        child: Text("Click photo / Select Image"),
-                      )
-                    : Image.file(File(widget.imagePath)),
+                child: ScalableOCR(
+                    paintboxCustom: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 4.0
+                      ..color = const Color.fromARGB(153, 102, 160, 241),
+                    boxLeftOff: 4,
+                    boxBottomOff: 2.7,
+                    boxRightOff: 4,
+                    boxTopOff: 2.7,
+                    boxHeight: MediaQuery.of(context).size.height / 5,
+                    getRawData: (value) {
+                      inspect(value);
+                    },
+                    getScannedText: (value) {
+                      setText(value);
+                    }),
               ),
             ),
+            // StreamBuilder<String>(
+            //   stream: controller.stream,
+            //   builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            //     return Result(
+            //         text: snapshot.data != null ? snapshot.data! : "");
+            //   },
+            // ),
             const Spacer(flex: 3),
             const Text(
               "Vehicle Number",
@@ -52,7 +82,12 @@ class _CheckPlateState extends State<CheckPlate> {
               ),
             ),
             const Spacer(flex: 2),
-            const Text("MH48 AH 2002"), // change from static to dynamic
+            StreamBuilder<String>(
+                stream: controller.stream,
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  return Text(snapshot.data != null ? snapshot.data! : "");
+                }), // change from static to dynamic
             const SizedBox(
               height: 20,
             ),
@@ -62,6 +97,9 @@ class _CheckPlateState extends State<CheckPlate> {
             // ),
             const Spacer(flex: 4),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+              ),
               onPressed: () {
                 Get.to(() => const InvalidScreen());
               },
