@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:vehiscan/src/app.dart';
 import 'package:vehiscan/src/screens/admin_record.dart/admin_home.dart';
 import 'package:vehiscan/src/screens/guard_screen/check_plate.dart';
@@ -29,14 +29,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarWidget(),
-      body: Container(        
+      body: Container(
         width: double.maxFinite,
         height: double.maxFinite,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Spacer(flex: 2,),
+            Spacer(
+              flex: 1,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image.network("https://img.freepik.com/free-vector/front-car-concept-illustration_114360-7978.jpg?w=1380&t=st=1696513992~exp=1696514592~hmac=14f7a429d85bf7aed10af0579c9f9c1690f829aeb184f6615d31cd37868fe825"),
+            ),
             Container(
               width: 260,
               child: Padding(
@@ -86,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       focusNode: focusNode,
                       onEditingComplete: onFieldSubmitted,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.apartment_rounded),
+                        prefixIcon: Icon(Icons.apartment_rounded),                        
                       ),
                     );
                   },
@@ -100,19 +106,34 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 40,),
-            // Spacer(flex: 1,),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CheckPlate(),
-                  ),
-                );
-              },
-              child: const Text("Scan"),
+            SizedBox(
+              height: 40,
             ),
-            Spacer(flex: 1,),
+            // Spacer(flex: 1,),
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CheckPlate(),
+                    ),
+                  );
+                },
+                icon: Icon(IconlyLight.camera),
+                label: const Text("Scan"),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  backgroundColor: Colors.purple,
+                  elevation: 1,
+                ),
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
           ],
         ),
       ),

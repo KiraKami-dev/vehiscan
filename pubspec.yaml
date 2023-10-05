@@ -37,7 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   shared_preferences: ^2.0.15
   riverpod: ^2.3.7
-  image_picker: ^1.0.2
+  # feather_icons: ^1.2.0
+  # image_picker: ^1.0.2
+  flutter_iconly: ^1.0.2
   flutter_scalable_ocr: ^2.0.0
   drop_down_list: ^0.0.5
   
