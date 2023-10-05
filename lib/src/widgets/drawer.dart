@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:vehiscan/src/screens/admin_record.dart/admin_home.dart';
+import 'package:vehiscan/src/screens/admin_record.dart/admin_login.dart';
 import 'package:vehiscan/src/screens/home_screen.dart';
 import 'package:vehiscan/src/services/utils.dart';
 
@@ -50,7 +50,7 @@ class _NavDrawerState extends State<NavDrawer> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => AdminHome(),
+                  builder: (context) => AdminLogin(),
                 ),
               );
             },

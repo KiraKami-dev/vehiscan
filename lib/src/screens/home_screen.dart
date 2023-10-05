@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:vehiscan/src/app.dart';
-import 'package:vehiscan/src/screens/admin_record.dart/admin_home.dart';
+import 'package:vehiscan/src/screens/admin_record.dart/admin_login.dart';
 import 'package:vehiscan/src/screens/guard_screen/check_plate.dart';
 import 'package:vehiscan/src/services/local_storage.dart';
 import 'package:vehiscan/src/widgets/appbar.widget.dart';

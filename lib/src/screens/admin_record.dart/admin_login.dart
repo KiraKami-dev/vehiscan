@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vehiscan/src/screens/admin_record.dart/admin_records.dart';
 
 import '../../services/local_storage.dart';
 import '../../widgets/appbar.widget.dart';
 import '../../widgets/drawer.dart';
 
-class AdminHome extends ConsumerStatefulWidget {
-  const AdminHome({super.key});
+class AdminLogin extends ConsumerStatefulWidget {
+  const AdminLogin({super.key});
 
   @override
-  ConsumerState<AdminHome> createState() => _AdminHomeState();
+  ConsumerState<AdminLogin> createState() => _AdminLoginState();
 }
 
-class _AdminHomeState extends ConsumerState<AdminHome> {
+class _AdminLoginState extends ConsumerState<AdminLogin> {
   static const List<String> _kOptions = <String>[
     'Kishor Kunj 5, virar (w)',
     'Kishor Kunj 4, virar (w)',
@@ -30,10 +32,16 @@ class _AdminHomeState extends ConsumerState<AdminHome> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                const Spacer(
+                  flex: 1,
+                ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Image.network(
                       "https://img.freepik.com/free-vector/front-car-concept-illustration_114360-7978.jpg?w=1380&t=st=1696513992~exp=1696514592~hmac=14f7a429d85bf7aed10af0579c9f9c1690f829aeb184f6615d31cd37868fe825"),
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 Container(
                   width: 260,
@@ -100,6 +108,64 @@ class _AdminHomeState extends ConsumerState<AdminHome> {
                       },
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 30,
+                  width: 250,
+                  child: const TextField(
+                    cursorColor: Colors.black54,
+                    textAlign: TextAlign.left,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(IconlyLight.password),
+                      // iconColor: Colors.black,
+                      // focusColor: Colors.black,
+                      enabledBorder: UnderlineInputBorder(
+                        //<-- SEE HERE
+                        borderSide:
+                            BorderSide(width: 0.5, color: Colors.black45),
+                      ),
+                      border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 0.5, color: Colors.black)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 0.5, color: Colors.black)),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 36,
+                ),
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => AdminRecords(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      IconlyLight.login,
+                      color: Colors.white70,
+                    ),
+                    label: const Text("Login"),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: Colors.purple,
+                      elevation: 1,
+                    ),
+                  ),
+                ),
+                const Spacer(
+                  flex: 2,
                 ),
               ]),
         ));
