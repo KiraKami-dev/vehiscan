@@ -4,8 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_scalable_ocr/flutter_scalable_ocr.dart';
-import 'package:get/get.dart';
-import 'package:vehiscan/src/screens/guard_screen/invalid_screen.dart';
+import 'package:vehiscan/src/screens/home_screen.dart';
 import 'package:vehiscan/src/utils/global_methods.dart';
 import 'package:vehiscan/src/widgets/appbar.widget.dart';
 
@@ -101,15 +100,17 @@ class _CheckPlateState extends State<CheckPlate> {
                 backgroundColor: Colors.redAccent,
               ),
               onPressed: () {
-                Get.to(() => const InvalidScreen());
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ),
+                );
               },
               child: const Text("Invalid vehicle number tap here!"),
             ),
             const Spacer(flex: 1),
             ElevatedButton(
-              onPressed: () {
-                Get.back();
-              },
+              onPressed: () {},
               child: const Text(
                 "Go Back",
               ),

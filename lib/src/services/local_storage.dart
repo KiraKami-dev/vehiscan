@@ -5,11 +5,11 @@ class LocalStorageService {
     await prefs()!.setString('buildingName', buildingName);
   }
 
-  static String? getSelectedTv() {
-    return prefs()!.getString('buildingName');
+  static String getSelectedBuilding() {
+    return prefs()!.getString('buildingName') ?? "";
   }
 
-  static Future<bool> removeSelectedTv() {
+  static Future<bool> removeSelectedBuilding() {
     return prefs()!.remove('buildingName');
   }
 

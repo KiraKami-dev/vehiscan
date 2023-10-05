@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vehiscan/src/screens/guard_screen/check_plate.dart';
 import 'package:vehiscan/src/services/utils.dart';
 import 'package:vehiscan/src/utils/global_methods.dart';
 import 'package:vehiscan/src/widgets/appbar.widget.dart';
-
 
 class GuardHome extends StatefulWidget {
   const GuardHome({super.key});
@@ -22,7 +20,6 @@ const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 class _GuardHomeState extends State<GuardHome> {
   String dropdownValue = list.first;
   // void dropDown
-  
 
   @override
   Widget build(BuildContext context) {
@@ -56,20 +53,13 @@ class _GuardHomeState extends State<GuardHome> {
               ),
             ),
             ElevatedButton(
-              onPressed: () async {
-                // await GlobalMethod().pickImageCamera();
-                Get.to(()=>CheckPlate());
-                
-              },
+              onPressed: () {},
               child: const Text("Click photo"),
             ),
             ElevatedButton(
-              onPressed: () async {
-                Get.to(()=>CheckPlate());
-
-              },
+              onPressed: () {},
               child: const Text("Camera roll"),
-            ),            
+            ),
           ],
         ),
       ),
