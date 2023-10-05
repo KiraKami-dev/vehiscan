@@ -8,6 +8,7 @@ import 'package:vehiscan/src/screens/admin_record.dart/admin_home.dart';
 import 'package:vehiscan/src/screens/guard_screen/check_plate.dart';
 import 'package:vehiscan/src/services/local_storage.dart';
 import 'package:vehiscan/src/widgets/appbar.widget.dart';
+import 'package:vehiscan/src/widgets/drawer.dart';
 
 import '../services/utils.dart';
 
@@ -28,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarWidget(),
+      endDrawer: NavDrawer(),
       body: Container(
         width: double.maxFinite,
         height: double.maxFinite,
