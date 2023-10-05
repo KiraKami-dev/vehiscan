@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vehiscan/src/app.dart';
 import 'package:vehiscan/src/screens/admin_record.dart/admin_home.dart';
+import 'package:vehiscan/src/screens/guard_screen/check_plate.dart';
 import 'package:vehiscan/src/screens/guard_screen/home_guard.dart';
 import 'package:vehiscan/src/services/local_storage.dart';
 import 'package:vehiscan/src/widgets/appbar.widget.dart';
@@ -28,40 +29,90 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarWidget(),
-      body: Container(
+      body: Container(        
         width: double.maxFinite,
+        height: double.maxFinite,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            Spacer(flex: 2,),
             Container(
-              width: 200,
-              child: Autocomplete<String>(
-                initialValue: TextEditingValue(
-                    text: LocalStorageService.getSelectedBuilding()),
-                optionsBuilder: (TextEditingValue textEditingValue) {
-                  if (textEditingValue.text == '') {
-                    return const Iterable<String>.empty();
-                  }
-                  return _kOptions.where((String option) {
-                    return option
-                        .toLowerCase()
-                        .contains(textEditingValue.text.toLowerCase());
-                  });
-                },
-                onSelected: (String buildingName) {
-                  setState(
-                    () {
-                      LocalStorageService.saveBuildingName(buildingName);
-                    },
-                  );
-                },
+              width: 260,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Autocomplete<String>(
+                  initialValue: TextEditingValue(
+                      text: LocalStorageService.getSelectedBuilding()),
+                  optionsBuilder: (TextEditingValue textEditingValue) {
+                    if (textEditingValue.text == '') {
+                      return const Iterable<String>.empty();
+                    }
+                    return _kOptions.where((String option) {
+                      return option
+                          .toLowerCase()
+                          .contains(textEditingValue.text.toLowerCase());
+                    });
+                  },
+                  optionsViewBuilder: (context, onSelected, options) => Align(
+                    alignment: Alignment.topLeft,
+                    child: Material(
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Container(
+                        height: 52.0 * options.length,
+                        width: 250,
+                        child: ListView.builder(
+                            itemCount: options.length,
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: false,
+                            itemBuilder: (context, index) {
+                              final String item = options.elementAt(index);
+                              return InkWell(
+                                onTap: () => onSelected(item),
+                                child: Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Text(item),
+                                ),
+                              );
+                            }),
+                      ),
+                    ),
+                  ),
+                  fieldViewBuilder: (context, textEditingController, focusNode,
+                      onFieldSubmitted) {
+                    return TextField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                      onEditingComplete: onFieldSubmitted,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.apartment_rounded),
+                      ),
+                    );
+                  },
+                  onSelected: (String buildingName) {
+                    setState(
+                      () {
+                        LocalStorageService.saveBuildingName(buildingName);
+                      },
+                    );
+                  },
+                ),
               ),
             ),
+            SizedBox(height: 40,),
+            // Spacer(flex: 1,),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CheckPlate(),
+                  ),
+                );
+              },
               child: const Text("Scan"),
             ),
+            Spacer(flex: 1,),
           ],
         ),
       ),
