@@ -6,7 +6,6 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:vehiscan/src/app.dart';
 import 'package:vehiscan/src/screens/admin_record.dart/admin_home.dart';
 import 'package:vehiscan/src/screens/guard_screen/check_plate.dart';
-import 'package:vehiscan/src/screens/guard_screen/home_guard.dart';
 import 'package:vehiscan/src/services/local_storage.dart';
 import 'package:vehiscan/src/widgets/appbar.widget.dart';
 
@@ -41,7 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Image.network("https://img.freepik.com/free-vector/front-car-concept-illustration_114360-7978.jpg?w=1380&t=st=1696513992~exp=1696514592~hmac=14f7a429d85bf7aed10af0579c9f9c1690f829aeb184f6615d31cd37868fe825"),
+              child: Image.network(
+                  "https://img.freepik.com/free-vector/front-car-concept-illustration_114360-7978.jpg?w=1380&t=st=1696513992~exp=1696514592~hmac=14f7a429d85bf7aed10af0579c9f9c1690f829aeb184f6615d31cd37868fe825"),
             ),
             Container(
               width: 260,
@@ -69,19 +69,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 52.0 * options.length,
                         width: 250,
                         child: ListView.builder(
-                            itemCount: options.length,
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: false,
-                            itemBuilder: (context, index) {
-                              final String item = options.elementAt(index);
-                              return InkWell(
-                                onTap: () => onSelected(item),
-                                child: Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Text(item),
-                                ),
-                              );
-                            }),
+                          itemCount: options.length,
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: false,
+                          itemBuilder: (context, index) {
+                            final String item = options.elementAt(index);
+                            return InkWell(
+                              onTap: () => onSelected(item),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Text(item),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -92,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       focusNode: focusNode,
                       onEditingComplete: onFieldSubmitted,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.apartment_rounded),                        
+                        prefixIcon: Icon(Icons.apartment_rounded),
                       ),
                     );
                   },
@@ -120,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
-                icon: Icon(IconlyLight.camera),
+                icon: Icon(IconlyBold.scan,color: Colors.white70,),
                 label: const Text("Scan"),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
