@@ -23,7 +23,7 @@ class _AdminLoginState extends ConsumerState<AdminLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const AppBarWidget(),
+        appBar: const AppBarWidget(lead: false),
         endDrawer: NavDrawer(),
         body: Container(
           height: double.maxFinite,

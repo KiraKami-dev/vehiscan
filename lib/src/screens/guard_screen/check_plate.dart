@@ -42,7 +42,7 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
     bool plateCheck = ref.watch(checkNumber);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: const AppBarWidget(),
+      appBar: const AppBarWidget(lead: true),
       body: Container(
         width: double.infinity,
         child: Column(
