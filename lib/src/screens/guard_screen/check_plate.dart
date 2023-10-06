@@ -90,8 +90,7 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
                 decoration: InputDecoration(
                   // border: Border(bottom: 1),s
                   focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 0.5, color: Colors.black)),
+                      borderSide: BorderSide(width: 0.5, color: Colors.black)),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                         width: 0.5, color: Colors.black), //<-- SEE HERE
@@ -113,7 +112,9 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
                 stream: controller.stream,
                 builder:
                     (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  if (_numberplate.contains(snapshot.data)) {
+                  String vehicleNumber =
+                      snapshot.data!.replaceAll(RegExp(r'[^a-zA-Z0-9 ]'), '');
+                  if (_numberplate.contains(vehicleNumber)) {
                     // Unhandled Exception: Tried to modify a provider while the widget tree was building.
                     // ref.read(checkNumber.notifier).state = true;
                   } else {
@@ -122,10 +123,10 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
                   }
                   return Text(
                     snapshot.data != null
-                        ? "Scanned : ${snapshot.data!}"
+                        ? "Scanned : $vehicleNumber"
                         : "Scanned : ",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 14),
                   );
                 }), // change from static to dynamic
             const SizedBox(
@@ -149,8 +150,8 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              onPressed: (){                  
-                ref.read(checkNumber.state).state = true;
+              onPressed: () {
+                ref.read(checkNumber.state).update((state) => true);
               },
               child: const Text("Check Number Manually"),
             ),

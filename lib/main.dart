@@ -7,7 +7,9 @@ import 'src/utils/shared_prefs.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();
-  runApp(ProviderScope(
-    child: const MyApp(),
-  ));
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
