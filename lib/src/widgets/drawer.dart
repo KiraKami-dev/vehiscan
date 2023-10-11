@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:vehiscan/src/screens/admin_record.dart/admin_login.dart';
 import 'package:vehiscan/src/screens/home_screen.dart';
+import 'package:vehiscan/src/screens/user_resgistration/user_reg.dart';
 import 'package:vehiscan/src/services/utils.dart';
 
 class NavDrawer extends StatefulWidget {
@@ -34,6 +35,23 @@ class _NavDrawerState extends State<NavDrawer> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => HomeScreen(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            trailing: Icon(
+              IconlyBold.user2,
+              color: Colors.black,
+            ),
+            title: Text(
+              'Register',
+              style: TextStyle(color: Colors.black),
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UserRegistration(),
                 ),
               );
             },
