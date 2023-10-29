@@ -3,23 +3,26 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vehiscan/src/app.dart';
+import 'package:vehiscan/src/models/building_model.dart';
 import 'package:vehiscan/src/screens/admin_record.dart/admin_login.dart';
 import 'package:vehiscan/src/screens/guard_screen/check_plate.dart';
+import 'package:vehiscan/src/services/backend.dart';
 import 'package:vehiscan/src/services/local_storage.dart';
 import 'package:vehiscan/src/widgets/appbar.widget.dart';
 import 'package:vehiscan/src/widgets/drawer.dart';
 
 import '../services/utils.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   static const List<String> _kOptions = <String>[
     'Kishor Kunj 5, virar (w)',
     'Kishor Kunj 4, virar (w)',
@@ -27,7 +30,18 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    
+    @override
+    void initState() {
+      super.initState();
+    }
+
+    // final buildingsReg = ref.watch(registerBuildProvider);
+    // final buildingLogin = ref.watch(loginBuildProvider);
+    final buildings = ref.watch(getAllBuildProvider);
+    // final getAllCars = ref.watch(carsByIdProvider);
+    // final addCar = ref.watch(addCarsProvider);
+    // final removeCar = ref.watch(removeCarsProvider);
+
     return Scaffold(
       appBar: const AppBarWidget(lead: false),
       endDrawer: NavDrawer(),
@@ -50,63 +64,75 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 260,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Autocomplete<String>(
-                  initialValue: TextEditingValue(
-                      text: LocalStorageService.getSelectedBuilding()),
-                  optionsBuilder: (TextEditingValue textEditingValue) {
-                    if (textEditingValue.text == '') {
-                      return const Iterable<String>.empty();
-                    }
-                    return _kOptions.where((String option) {
-                      return option
-                          .toLowerCase()
-                          .contains(textEditingValue.text.toLowerCase());
-                    });
-                  },
-                  optionsViewBuilder: (context, onSelected, options) => Align(
-                    alignment: Alignment.topLeft,
-                    child: Material(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Container(
-                        height: 52.0 * options.length,
-                        width: 250,
-                        child: ListView.builder(
-                          itemCount: options.length,
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: false,
-                          itemBuilder: (context, index) {
-                            final String item = options.elementAt(index);
-                            return InkWell(
-                              onTap: () => onSelected(item),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Text(item),
-                              ),
-                            );
-                          },
+                child: buildings.when(
+                  data: (data) {
+                    print(data);
+                    return Autocomplete<BuildingModel>(
+                      // displayStringForOption: (option) => option.name,
+                      initialValue: TextEditingValue(
+                          text: LocalStorageService.getSelectedBuilding()),
+                      optionsBuilder:
+                          (TextEditingValue textEditingValue) async {
+                        if (textEditingValue.text == '') {
+                          return const Iterable<BuildingModel>.empty();
+                        }
+                        return data
+                            .where((building) =>
+                                building.name.toLowerCase().contains(textEditingValue.text.toLowerCase()))
+                            .toList();
+                      },
+                      optionsViewBuilder: (context, onSelected, options) =>
+                          Align(
+                        alignment: Alignment.topLeft,
+                        child: Material(
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Container(
+                            height: 52.0 * options.length,
+                            width: 250,
+                            child: ListView.builder(
+                              itemCount: options.length,
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: false,
+                              itemBuilder: (context, index) {
+                                final item = options.elementAt(index);
+                                return InkWell(
+                                  onTap: () => onSelected(item),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Text(item.name),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  fieldViewBuilder: (context, textEditingController, focusNode,
-                      onFieldSubmitted) {
-                    return TextField(
-                      controller: textEditingController,
-                      focusNode: focusNode,
-                      onEditingComplete: onFieldSubmitted,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.apartment_rounded),
-                      ),
-                    );
-                  },
-                  onSelected: (String buildingName) {
-                    setState(
-                      () {
-                        LocalStorageService.saveBuildingName(buildingName);
+                      fieldViewBuilder: (context, textEditingController,
+                          focusNode, onFieldSubmitted) {
+                        return TextField(
+                          controller: textEditingController,
+                          focusNode: focusNode,
+                          onEditingComplete: onFieldSubmitted,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.apartment_rounded),
+                          ),
+                        );
+                      },
+                      onSelected: (buildingName) {
+                        setState(
+                          () {
+                            LocalStorageService.saveBuildingName(
+                                buildingName.name);
+                          },
+                        );
                       },
                     );
                   },
+                  error: (error, stackTrace) =>
+                      Text('Error: $error $stackTrace'),
+                  loading: () => Center(child: CircularProgressIndicator()),
                 ),
               ),
             ),
@@ -124,7 +150,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
-                icon: Icon(IconlyBold.scan,color: Colors.white70,),
+                icon: Icon(
+                  IconlyBold.scan,
+                  color: Colors.white70,
+                ),
                 label: const Text("Scan"),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(

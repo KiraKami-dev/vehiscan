@@ -39,6 +39,7 @@ dependencies:
 
   #State Managment
   flutter_riverpod: ^2.4.2
+  riverpod_annotation: ^2.2.0
 
   #Icons
   flutter_iconly: ^1.0.2
@@ -53,8 +54,13 @@ dependencies:
 
   
 dev_dependencies:
+  
+  #Riverpod State
+  build_runner: ^2.4.6
   riverpod_lint: ^2.0.4
   riverpod_generator: ^2.3.1
+
+
   flutter_test:
     sdk: flutter
 
