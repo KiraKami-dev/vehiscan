@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vehiscan/src/services/backend.dart';
 
-class DeleteDialog extends StatelessWidget {
-  const DeleteDialog({Key? key}) : super(key: key);
+class DeleteDialog extends ConsumerStatefulWidget {
+  DeleteDialog({Key? key, required this.carId}) : super(key: key);
+
+  final String carId;
   final primaryColor = const Color(0xff4338CA);
   final accentColor = const Color(0xffffffff);
 
   @override
+  ConsumerState<DeleteDialog> createState() => _DeleteDialogState();
+}
+
+class _DeleteDialogState extends ConsumerState<DeleteDialog> {
+  @override
   Widget build(BuildContext context) {
+    final deleteCar = ref.watch(removeCarsProvider(widget.carId));
     return Dialog(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -60,6 +70,7 @@ class DeleteDialog extends StatelessWidget {
                 SimpleBtn1(
                     text: "Delete",
                     onPressed: () {
+                      ref.read(removeCarsProvider(widget.carId));
                       //@TODO Remove vehicle at that Index
                       Navigator.of(context).pop();
                     }),

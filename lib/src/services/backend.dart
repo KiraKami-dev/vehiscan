@@ -111,21 +111,21 @@ Future carsById(CarsByIdRef ref) async {
 }
 
 @riverpod
-void addCars(AddCarsRef ref) async {
-  final selectedBuiling = LocalStorageService.getSelectedBuilding();
+Future addCars(AddCarsRef ref,String carNumber,bool isCar) async {
+  final buildingId = LocalStorageService.getSelectedId();
   final addCar = await dio.post(
-    "$baseUrl/buildings/64b85141-93c2-42c2-9a86-b2fc8f1bde3c/cars",
-    data: {'carNumber': 'MH48AT1232', 'isCar': 'true'},
+    "$baseUrl/buildings/0188edec-1e63-4995-91fc-7308a3f03b31/cars",
+    data: {'carNumber': '$carNumber', 'isCar': '$isCar'},
   );
   print(addCar.data);
 }
 
 @riverpod
-void removeCars(RemoveCarsRef ref) async {
-  final selectedBuiling = LocalStorageService.getSelectedBuilding();
+Future removeCars(RemoveCarsRef ref,String carId) async {
+  final buildingId = LocalStorageService.getSelectedId();
   final removeCar = await dio.delete(
-    "$baseUrl/buildings/64b85141-93c2-42c2-9a86-b2fc8f1bde3c/cars/f75a7053-90fc-4488-853b-7419ddec2b70",
-    data: {'carNumber': 'MH48AT1232', 'isCar': 'true'},
+    "$baseUrl/buildings/0188edec-1e63-4995-91fc-7308a3f03b31/cars/$carId",
+    // data: {'carNumber': '$carNumber', 'isCar': '$isCar'},
   );
   print("Car removed : ");
   print(removeCar.data);

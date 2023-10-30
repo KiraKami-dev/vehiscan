@@ -17,62 +17,62 @@ class RecordScreen extends ConsumerStatefulWidget {
   ConsumerState<RecordScreen> createState() => _RecordScreenState();
 }
 
-class _RecordScreenState extends ConsumerState<RecordScreen> {
-  final items = List<String>.generate(20, (i) => 'Item ${i + 1}');
+class _RecordScreenState extends ConsumerState<RecordScreen> {  
   final searchController = TextEditingController();
   final FocusNode searchTextFocusNode = FocusNode();
   var vehicle = <String>[];
 
   @override
   void initState() {
-    vehicle = items;
+    
     super.initState();
-  }
-
-  void filterSearchResults(String query) {
-    setState(() {
-      vehicle = items
-          .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     // ref.watch(recordSwitch.notifier).update((state) => false);
     final getAllCars = ref.watch(carsByIdProvider);
-    return Column(
-      children: [
-        SearchInput(
-          textController: searchController,
-          hintText: "Search",
-          onChanged: filterSearchResults,
-        ),
-        Expanded(
-          child: getAllCars.when(
-            data: (cars) => ListView.builder(
-              itemCount: cars.length,
-              itemBuilder: (context, index) {
-                final carItem = cars[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12.0,
-                    vertical: 4,
-                  ),
-                  child: ListTile(
-                    leading: carItem["iscar"] ? Icon(Icons.car_crash)
-                    : Icon(Icons.electric_bike_rounded),
-                    trailing: const Text("at 8:30 am"),
-                    title: Text(carItem["carnumber"]),
-                  ),
-                );
-              },
+    return getAllCars.when(
+        data: (cars) {
+          void filterSearchResults(String query) {
+            setState(() {
+              vehicle = cars
+                  .where((item) =>
+                      item.toLowerCase().contains(query.toLowerCase()))
+                  .toList();
+            });
+          }
+
+          return Column(children: [
+            SearchInput(
+              textController: searchController,
+              hintText: "Search",
+              onChanged: filterSearchResults,
             ),
-            error: (error, stackTrace) => Text('Error: $error $stackTrace'),
-            loading: () => Center(child: CircularProgressIndicator()),
-          ),
-        ),
-      ],
-    );
+            Expanded(
+              child: ListView.builder(
+                itemCount: cars.length,
+                itemBuilder: (context, index) {
+                  final carItem = cars[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 4,
+                    ),
+                    child: ListTile(
+                      leading: carItem["iscar"]
+                          ? const Icon(Icons.car_crash)
+                          : const Icon(Icons.electric_bike_rounded),
+                      trailing: const Text("at 8:30 am"),
+                      title: Text(carItem["carnumber"]),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ]);
+        },
+        loading: () => Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Text('Error: $error $stackTrace'));
   }
 }

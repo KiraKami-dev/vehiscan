@@ -407,33 +407,276 @@ final carsByIdProvider = AutoDisposeFutureProvider<dynamic>.internal(
 );
 
 typedef CarsByIdRef = AutoDisposeFutureProviderRef<dynamic>;
-String _$addCarsHash() => r'dfef9616bf61ee0355a753e0fbf14109ffcb00da';
+String _$addCarsHash() => r'e2f007cdc79c1d8db5500069f3cd84a44f4a23f6';
 
 /// See also [addCars].
 @ProviderFor(addCars)
-final addCarsProvider = AutoDisposeProvider<void>.internal(
-  addCars,
-  name: r'addCarsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$addCarsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const addCarsProvider = AddCarsFamily();
 
-typedef AddCarsRef = AutoDisposeProviderRef<void>;
-String _$removeCarsHash() => r'e1964ceb5fc6fbfa5a71d66870d54df7861adf16';
+/// See also [addCars].
+class AddCarsFamily extends Family<AsyncValue<dynamic>> {
+  /// See also [addCars].
+  const AddCarsFamily();
+
+  /// See also [addCars].
+  AddCarsProvider call(
+    String carNumber,
+    bool isCar,
+  ) {
+    return AddCarsProvider(
+      carNumber,
+      isCar,
+    );
+  }
+
+  @override
+  AddCarsProvider getProviderOverride(
+    covariant AddCarsProvider provider,
+  ) {
+    return call(
+      provider.carNumber,
+      provider.isCar,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'addCarsProvider';
+}
+
+/// See also [addCars].
+class AddCarsProvider extends AutoDisposeFutureProvider<dynamic> {
+  /// See also [addCars].
+  AddCarsProvider(
+    String carNumber,
+    bool isCar,
+  ) : this._internal(
+          (ref) => addCars(
+            ref as AddCarsRef,
+            carNumber,
+            isCar,
+          ),
+          from: addCarsProvider,
+          name: r'addCarsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$addCarsHash,
+          dependencies: AddCarsFamily._dependencies,
+          allTransitiveDependencies: AddCarsFamily._allTransitiveDependencies,
+          carNumber: carNumber,
+          isCar: isCar,
+        );
+
+  AddCarsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.carNumber,
+    required this.isCar,
+  }) : super.internal();
+
+  final String carNumber;
+  final bool isCar;
+
+  @override
+  Override overrideWith(
+    FutureOr<dynamic> Function(AddCarsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: AddCarsProvider._internal(
+        (ref) => create(ref as AddCarsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        carNumber: carNumber,
+        isCar: isCar,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<dynamic> createElement() {
+    return _AddCarsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AddCarsProvider &&
+        other.carNumber == carNumber &&
+        other.isCar == isCar;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, carNumber.hashCode);
+    hash = _SystemHash.combine(hash, isCar.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin AddCarsRef on AutoDisposeFutureProviderRef<dynamic> {
+  /// The parameter `carNumber` of this provider.
+  String get carNumber;
+
+  /// The parameter `isCar` of this provider.
+  bool get isCar;
+}
+
+class _AddCarsProviderElement extends AutoDisposeFutureProviderElement<dynamic>
+    with AddCarsRef {
+  _AddCarsProviderElement(super.provider);
+
+  @override
+  String get carNumber => (origin as AddCarsProvider).carNumber;
+  @override
+  bool get isCar => (origin as AddCarsProvider).isCar;
+}
+
+String _$removeCarsHash() => r'59136c9fecc9dbfd0d0ddf9cc31e7ea7a18f5197';
 
 /// See also [removeCars].
 @ProviderFor(removeCars)
-final removeCarsProvider = AutoDisposeProvider<void>.internal(
-  removeCars,
-  name: r'removeCarsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$removeCarsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const removeCarsProvider = RemoveCarsFamily();
 
-typedef RemoveCarsRef = AutoDisposeProviderRef<void>;
+/// See also [removeCars].
+class RemoveCarsFamily extends Family<AsyncValue<dynamic>> {
+  /// See also [removeCars].
+  const RemoveCarsFamily();
+
+  /// See also [removeCars].
+  RemoveCarsProvider call(
+    String carId,
+  ) {
+    return RemoveCarsProvider(
+      carId,
+    );
+  }
+
+  @override
+  RemoveCarsProvider getProviderOverride(
+    covariant RemoveCarsProvider provider,
+  ) {
+    return call(
+      provider.carId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'removeCarsProvider';
+}
+
+/// See also [removeCars].
+class RemoveCarsProvider extends AutoDisposeFutureProvider<dynamic> {
+  /// See also [removeCars].
+  RemoveCarsProvider(
+    String carId,
+  ) : this._internal(
+          (ref) => removeCars(
+            ref as RemoveCarsRef,
+            carId,
+          ),
+          from: removeCarsProvider,
+          name: r'removeCarsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$removeCarsHash,
+          dependencies: RemoveCarsFamily._dependencies,
+          allTransitiveDependencies:
+              RemoveCarsFamily._allTransitiveDependencies,
+          carId: carId,
+        );
+
+  RemoveCarsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.carId,
+  }) : super.internal();
+
+  final String carId;
+
+  @override
+  Override overrideWith(
+    FutureOr<dynamic> Function(RemoveCarsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RemoveCarsProvider._internal(
+        (ref) => create(ref as RemoveCarsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        carId: carId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<dynamic> createElement() {
+    return _RemoveCarsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RemoveCarsProvider && other.carId == carId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, carId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin RemoveCarsRef on AutoDisposeFutureProviderRef<dynamic> {
+  /// The parameter `carId` of this provider.
+  String get carId;
+}
+
+class _RemoveCarsProviderElement
+    extends AutoDisposeFutureProviderElement<dynamic> with RemoveCarsRef {
+  _RemoveCarsProviderElement(super.provider);
+
+  @override
+  String get carId => (origin as RemoveCarsProvider).carId;
+}
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
