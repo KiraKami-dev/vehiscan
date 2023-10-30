@@ -38,7 +38,7 @@ class _RecordScreenState extends ConsumerState<RecordScreen> {
             setState(() {
               vehicle = cars
                   .where((item) =>
-                      item.toLowerCase().contains(query.toLowerCase()))
+                      item.contains(query.toUpperCase())? true : false)
                   .toList();
             });
           }

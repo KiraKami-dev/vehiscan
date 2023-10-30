@@ -50,6 +50,9 @@ dependencies:
   #http 
   dio: ^5.3.3
 
+  
+  toggle_switch: ^2.1.0
+
 
 
   

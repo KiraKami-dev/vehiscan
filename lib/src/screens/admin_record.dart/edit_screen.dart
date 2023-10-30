@@ -36,7 +36,9 @@ class _EditScreenState extends ConsumerState<EditScreen> {
             setState(() {
               vehicle = cars
                   .where((item) =>
-                      item.toLowerCase().contains(query.toLowerCase()))
+                      item.toLowerCase().contains(query.toLowerCase())
+                          ? true
+                          : false)
                   .toList();
             });
           }
@@ -59,7 +61,9 @@ class _EditScreenState extends ConsumerState<EditScreen> {
                         vertical: 4,
                       ),
                       child: ListTile(
-                        leading: const Icon(Icons.electric_bike_rounded),
+                        leading: carItem["iscar"]
+                          ? const Icon(Icons.car_crash)
+                          : const Icon(Icons.electric_bike_rounded),
                         trailing: IconButton(
                           icon: Icon(
                             IconlyLight.delete,
@@ -68,7 +72,8 @@ class _EditScreenState extends ConsumerState<EditScreen> {
                           onPressed: () {
                             showDialog(
                               context: context,
-                              builder: (context) => DeleteDialog(carId: carItem["id"]),
+                              builder: (context) =>
+                                  DeleteDialog(carId: carItem["id"]),
                             );
                           }, //@TODO
                         ),

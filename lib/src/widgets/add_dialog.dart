@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import 'package:vehiscan/src/services/backend.dart';
 
-class AddDialog extends StatelessWidget {
-  const AddDialog({Key? key}) : super(key: key);
+class AddDialog extends ConsumerStatefulWidget {
+  AddDialog({Key? key}) : super(key: key);
   final primaryColor = const Color(0xff4338CA);
   final accentColor = const Color(0xffffffff);
 
+  @override
+  ConsumerState<AddDialog> createState() => _AddDialogState();
+}
+
+class _AddDialogState extends ConsumerState<AddDialog> {
+  TextEditingController vehiNum = TextEditingController();
+  bool isCar = false;
   @override
   Widget build(BuildContext context) {
     final edittingController = TextEditingController();
@@ -14,7 +24,7 @@ class AddDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Container(
         width: MediaQuery.of(context).size.width / 1.4,
-        height: MediaQuery.of(context).size.height / 3,
+        height: MediaQuery.of(context).size.height / 2.4,
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15.0),
@@ -51,7 +61,8 @@ class AddDialog extends StatelessWidget {
 
             Container(
               width: 160,
-              child: const TextField(
+              child: TextField(
+                controller: vehiNum,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
@@ -68,6 +79,31 @@ class AddDialog extends StatelessWidget {
             const SizedBox(
               height: 28,
             ),
+            ToggleSwitch(
+              minWidth: 90.0,
+              initialLabelIndex: 1,
+              cornerRadius: 20.0,
+              activeFgColor: Colors.white,
+              inactiveBgColor: Colors.grey,
+              inactiveFgColor: Colors.white,
+              totalSwitches: 2,
+              labels: ['Car', 'Bike'],
+              icons: [Icons.car_crash_rounded, Icons.bike_scooter_rounded],
+              activeBgColors: [
+                [Colors.deepPurple],
+                [Colors.redAccent]
+              ],
+              onToggle: (index) {
+                if (index == 0) {
+                  isCar = true;
+                } else {
+                  isCar = false;
+                }
+              },
+            ),
+            const SizedBox(
+              height: 28,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -81,7 +117,7 @@ class AddDialog extends StatelessWidget {
                 SimpleBtn1(
                     text: " Add ",
                     onPressed: () {
-                      //@TODO Remove vehicle at that Index
+                      ref.read(addCarsProvider(vehiNum.text.toUpperCase(),isCar));
                       Navigator.of(context).pop();
                       final snackBar = SnackBar(
                         content: const Text('New Vehicle added!'),

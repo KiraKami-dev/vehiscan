@@ -20,12 +20,11 @@ final countProvider = AutoDisposeProvider<int>.internal(
 );
 
 typedef CountRef = AutoDisposeProviderRef<int>;
-String _$getAllBuildHash() => r'a3f39835e86721a6c19cfe4ce0d7d3a56f3d9325';
+String _$getAllBuildHash() => r'dd7a94a779d331c3519f35fb9ac4469b1821c9d0';
 
 /// See also [getAllBuild].
 @ProviderFor(getAllBuild)
-final getAllBuildProvider =
-    AutoDisposeFutureProvider<List<BuildingModel>>.internal(
+final getAllBuildProvider = AutoDisposeFutureProvider<dynamic>.internal(
   getAllBuild,
   name: r'getAllBuildProvider',
   debugGetCreateSourceHash:
@@ -34,7 +33,7 @@ final getAllBuildProvider =
   allTransitiveDependencies: null,
 );
 
-typedef GetAllBuildRef = AutoDisposeFutureProviderRef<List<BuildingModel>>;
+typedef GetAllBuildRef = AutoDisposeFutureProviderRef<dynamic>;
 String _$registerBuildHash() => r'1ca96b4eefc991c5d42462ccd5a1250d9bcfc14c';
 
 /// Copied from Dart SDK

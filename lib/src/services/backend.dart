@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vehiscan/src/models/building_model.dart';
 import 'package:vehiscan/src/services/utils.dart';
+import 'package:vehiscan/src/utils/global_methods.dart';
 
 import '../models/cars_model.dart';
 import 'local_storage.dart';
@@ -27,12 +27,12 @@ void showSnackBar(BuildContext context, String text) {
 int count(CountRef ref) => 0;
 
 @riverpod
-Future<List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
+Future getAllBuild(GetAllBuildRef ref) async {
   final response = await dio.get('$baseUrl/buildings');
   final buildings = jsonDecode(response.data);
-  return buildings.map((building) => BuildingModel.fromJson(building)).toList();
+  print(buildings.data["buildings"]);
+  // return null;
 }
-// print(buildings.data["buildings"][0]["id"]);
 
 // return BuildingModel(id: "123", name: "Select a Building");
 // }
@@ -105,13 +105,11 @@ Future carsById(CarsByIdRef ref) async {
   final getAllcars = await dio
       .get("$baseUrl/buildings/0188edec-1e63-4995-91fc-7308a3f03b31/cars");
   print("Json Decode");
-  // final jsonData = jsonDecode(getAllcars.data["cars"]);
-  // print(jsonDecode(getAllcars.data["cars"]));
   return getAllcars.data["cars"];
 }
 
 @riverpod
-Future addCars(AddCarsRef ref,String carNumber,bool isCar) async {
+Future addCars(AddCarsRef ref, String carNumber, bool isCar) async {
   final buildingId = LocalStorageService.getSelectedId();
   final addCar = await dio.post(
     "$baseUrl/buildings/0188edec-1e63-4995-91fc-7308a3f03b31/cars",
@@ -121,7 +119,7 @@ Future addCars(AddCarsRef ref,String carNumber,bool isCar) async {
 }
 
 @riverpod
-Future removeCars(RemoveCarsRef ref,String carId) async {
+Future removeCars(RemoveCarsRef ref, String carId) async {
   final buildingId = LocalStorageService.getSelectedId();
   final removeCar = await dio.delete(
     "$baseUrl/buildings/0188edec-1e63-4995-91fc-7308a3f03b31/cars/$carId",
