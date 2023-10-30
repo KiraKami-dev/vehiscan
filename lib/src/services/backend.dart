@@ -12,7 +12,7 @@ import 'local_storage.dart';
 part 'backend.g.dart';
 
 final dio = Dio();
-const baseUrl = "http://192.168.43.34:8000/api";
+const baseUrl = "http://192.168.0.105:8000/api";
 
 // void getAllbuilding() async {
 //   final userOrder = await dio.get('$baseUrl/buildings');
@@ -29,8 +29,9 @@ int count(CountRef ref) => 0;
 @riverpod
 Future getAllBuild(GetAllBuildRef ref) async {
   final response = await dio.get('$baseUrl/buildings');
-  final buildings = jsonDecode(response.data);
-  print(buildings.data["buildings"]);
+  final buildings = response.data["buildings"];
+  // print(response.data["buildings"]);
+  return buildings;
   // return null;
 }
 

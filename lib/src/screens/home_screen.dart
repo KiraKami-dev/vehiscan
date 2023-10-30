@@ -52,7 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Spacer(
+            const Spacer(
               flex: 1,
             ),
             Padding(
@@ -65,20 +65,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: buildings.when(
-                  data: (data) {
-                    print(data);
+                  data: (builds) {
+                    
                     return Autocomplete<BuildingModel>(
                       // displayStringForOption: (option) => option.name,
                       initialValue: TextEditingValue(
-                          text: LocalStorageService.getSelectedBuilding()),
+                        text: LocalStorageService.getSelectedBuilding(),
+                      ),
                       optionsBuilder:
                           (TextEditingValue textEditingValue) async {
                         if (textEditingValue.text == '') {
                           return const Iterable<BuildingModel>.empty();
                         }
-                        return data
-                            .where((building) =>
-                                building.name.toLowerCase().contains(textEditingValue.text.toLowerCase()))
+                        return builds["name"]
+                            .where((building) => building.name
+                                .toLowerCase()
+                                .contains(textEditingValue.text.toLowerCase()))
                             .toList();
                       },
                       optionsViewBuilder: (context, onSelected, options) =>
@@ -89,7 +91,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
                           child: Container(
-                            height: 52.0 * options.length,
+                            height: 52.0,
                             width: 250,
                             child: ListView.builder(
                               itemCount: options.length,
