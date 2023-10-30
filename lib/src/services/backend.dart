@@ -1,26 +1,33 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vehiscan/src/models/building_model.dart';
+import 'package:vehiscan/src/services/utils.dart';
 
+import '../models/cars_model.dart';
 import 'local_storage.dart';
 
 part 'backend.g.dart';
 
 final dio = Dio();
-const baseUrl = "http://192.168.0.103:8000/api";
+const baseUrl = "http://192.168.43.34:8000/api";
 
 // void getAllbuilding() async {
 //   final userOrder = await dio.get('$baseUrl/buildings');
 // }
 // flutter pub run build_runner watch
+void showSnackBar(BuildContext context, String text) {
+  final snackBar = SnackBar(content: Text(text));
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
 
 @riverpod
 int count(CountRef ref) => 0;
 
 @riverpod
-Future <List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
+Future<List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
   final response = await dio.get('$baseUrl/buildings');
   final buildings = jsonDecode(response.data);
   return buildings.map((building) => BuildingModel.fromJson(building)).toList();
@@ -31,23 +38,43 @@ Future <List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
 // }
 
 @riverpod
-void registerBuild(RegisterBuildRef ref) async {
+Future<bool> registerBuild(RegisterBuildRef ref, String buildName,
+    String password, BuildContext context) async {
   final register = await dio.post('$baseUrl/buildings/register',
-      data: {'name': "Vasant Vihar", 'password': "21312"});
+      data: {'name': "$buildName", 'password': "$password"});
+
+  if (register.statusCode == 200) {
+    showSnackBar(context, "Registered Building!");
+    LocalStorageService.saveBuildingName(buildName);
+    return true;
+  } else {
+    showSnackBar(context, "Error while registering!");
+    return false;
+  }
 }
 
 @riverpod
-Future<Response> loginBuild(LoginBuildRef ref) async {
+Future<bool> loginBuild(LoginBuildRef ref, String buildName, String password,
+    BuildContext context) async {
   try {
-    final login = await dio.post('$baseUrl/buildings/login',
-        data: jsonEncode({'buildingName': "Vasant Vihar", 'password': "21312"}),
+    final login = await dio.get('$baseUrl/buildings/login',
+        data:
+            jsonEncode({'buildingName': "$buildName", 'password': "$password"}),
         options: Options(
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
         ));
-    return login.data;
+    if (login.statusCode == 200) {
+      showSnackBar(context, "Login Successful!");
+      LocalStorageService.saveBuildingName(buildName);
+      print("Login Successful!");
+      return true;
+    } else {
+      showSnackBar(context, "Error while login!");
+      return false;
+    }
   } catch (e) {
     print(e);
     rethrow;
@@ -73,11 +100,14 @@ Future<Response> logoutBuild(LogoutBuildRef ref) async {
 }
 
 @riverpod
-void carsById(CarsByIdRef ref) async {
+Future carsById(CarsByIdRef ref) async {
   final selectedBuiling = LocalStorageService.getSelectedBuilding();
   final getAllcars = await dio
-      .get("$baseUrl/buildings/26656409-9637-4593-be9b-e309ba46ca5c/cars");
-  print(getAllcars.data);
+      .get("$baseUrl/buildings/0188edec-1e63-4995-91fc-7308a3f03b31/cars");
+  print("Json Decode");
+  // final jsonData = jsonDecode(getAllcars.data["cars"]);
+  // print(jsonDecode(getAllcars.data["cars"]));
+  return getAllcars.data["cars"];
 }
 
 @riverpod

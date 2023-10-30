@@ -35,36 +35,349 @@ final getAllBuildProvider =
 );
 
 typedef GetAllBuildRef = AutoDisposeFutureProviderRef<List<BuildingModel>>;
-String _$registerBuildHash() => r'9cc87070aca6cdda458583b866df98f9f898e164';
+String _$registerBuildHash() => r'1ca96b4eefc991c5d42462ccd5a1250d9bcfc14c';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
 
 /// See also [registerBuild].
 @ProviderFor(registerBuild)
-final registerBuildProvider = AutoDisposeProvider<void>.internal(
-  registerBuild,
-  name: r'registerBuildProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$registerBuildHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const registerBuildProvider = RegisterBuildFamily();
 
-typedef RegisterBuildRef = AutoDisposeProviderRef<void>;
-String _$loginBuildHash() => r'd4e7dc1f4d2c25e798c801b5e91df4557fa628a9';
+/// See also [registerBuild].
+class RegisterBuildFamily extends Family<AsyncValue<bool>> {
+  /// See also [registerBuild].
+  const RegisterBuildFamily();
+
+  /// See also [registerBuild].
+  RegisterBuildProvider call(
+    String buildName,
+    String password,
+    BuildContext context,
+  ) {
+    return RegisterBuildProvider(
+      buildName,
+      password,
+      context,
+    );
+  }
+
+  @override
+  RegisterBuildProvider getProviderOverride(
+    covariant RegisterBuildProvider provider,
+  ) {
+    return call(
+      provider.buildName,
+      provider.password,
+      provider.context,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'registerBuildProvider';
+}
+
+/// See also [registerBuild].
+class RegisterBuildProvider extends AutoDisposeFutureProvider<bool> {
+  /// See also [registerBuild].
+  RegisterBuildProvider(
+    String buildName,
+    String password,
+    BuildContext context,
+  ) : this._internal(
+          (ref) => registerBuild(
+            ref as RegisterBuildRef,
+            buildName,
+            password,
+            context,
+          ),
+          from: registerBuildProvider,
+          name: r'registerBuildProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$registerBuildHash,
+          dependencies: RegisterBuildFamily._dependencies,
+          allTransitiveDependencies:
+              RegisterBuildFamily._allTransitiveDependencies,
+          buildName: buildName,
+          password: password,
+          context: context,
+        );
+
+  RegisterBuildProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.buildName,
+    required this.password,
+    required this.context,
+  }) : super.internal();
+
+  final String buildName;
+  final String password;
+  final BuildContext context;
+
+  @override
+  Override overrideWith(
+    FutureOr<bool> Function(RegisterBuildRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RegisterBuildProvider._internal(
+        (ref) => create(ref as RegisterBuildRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        buildName: buildName,
+        password: password,
+        context: context,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<bool> createElement() {
+    return _RegisterBuildProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RegisterBuildProvider &&
+        other.buildName == buildName &&
+        other.password == password &&
+        other.context == context;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, buildName.hashCode);
+    hash = _SystemHash.combine(hash, password.hashCode);
+    hash = _SystemHash.combine(hash, context.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin RegisterBuildRef on AutoDisposeFutureProviderRef<bool> {
+  /// The parameter `buildName` of this provider.
+  String get buildName;
+
+  /// The parameter `password` of this provider.
+  String get password;
+
+  /// The parameter `context` of this provider.
+  BuildContext get context;
+}
+
+class _RegisterBuildProviderElement
+    extends AutoDisposeFutureProviderElement<bool> with RegisterBuildRef {
+  _RegisterBuildProviderElement(super.provider);
+
+  @override
+  String get buildName => (origin as RegisterBuildProvider).buildName;
+  @override
+  String get password => (origin as RegisterBuildProvider).password;
+  @override
+  BuildContext get context => (origin as RegisterBuildProvider).context;
+}
+
+String _$loginBuildHash() => r'1648aae461570c14255b735fe3a820884d1ad4ed';
 
 /// See also [loginBuild].
 @ProviderFor(loginBuild)
-final loginBuildProvider =
-    AutoDisposeFutureProvider<Response<dynamic>>.internal(
-  loginBuild,
-  name: r'loginBuildProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$loginBuildHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const loginBuildProvider = LoginBuildFamily();
 
-typedef LoginBuildRef = AutoDisposeFutureProviderRef<Response<dynamic>>;
+/// See also [loginBuild].
+class LoginBuildFamily extends Family<AsyncValue<bool>> {
+  /// See also [loginBuild].
+  const LoginBuildFamily();
+
+  /// See also [loginBuild].
+  LoginBuildProvider call(
+    String buildName,
+    String password,
+    BuildContext context,
+  ) {
+    return LoginBuildProvider(
+      buildName,
+      password,
+      context,
+    );
+  }
+
+  @override
+  LoginBuildProvider getProviderOverride(
+    covariant LoginBuildProvider provider,
+  ) {
+    return call(
+      provider.buildName,
+      provider.password,
+      provider.context,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loginBuildProvider';
+}
+
+/// See also [loginBuild].
+class LoginBuildProvider extends AutoDisposeFutureProvider<bool> {
+  /// See also [loginBuild].
+  LoginBuildProvider(
+    String buildName,
+    String password,
+    BuildContext context,
+  ) : this._internal(
+          (ref) => loginBuild(
+            ref as LoginBuildRef,
+            buildName,
+            password,
+            context,
+          ),
+          from: loginBuildProvider,
+          name: r'loginBuildProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$loginBuildHash,
+          dependencies: LoginBuildFamily._dependencies,
+          allTransitiveDependencies:
+              LoginBuildFamily._allTransitiveDependencies,
+          buildName: buildName,
+          password: password,
+          context: context,
+        );
+
+  LoginBuildProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.buildName,
+    required this.password,
+    required this.context,
+  }) : super.internal();
+
+  final String buildName;
+  final String password;
+  final BuildContext context;
+
+  @override
+  Override overrideWith(
+    FutureOr<bool> Function(LoginBuildRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: LoginBuildProvider._internal(
+        (ref) => create(ref as LoginBuildRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        buildName: buildName,
+        password: password,
+        context: context,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<bool> createElement() {
+    return _LoginBuildProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is LoginBuildProvider &&
+        other.buildName == buildName &&
+        other.password == password &&
+        other.context == context;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, buildName.hashCode);
+    hash = _SystemHash.combine(hash, password.hashCode);
+    hash = _SystemHash.combine(hash, context.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin LoginBuildRef on AutoDisposeFutureProviderRef<bool> {
+  /// The parameter `buildName` of this provider.
+  String get buildName;
+
+  /// The parameter `password` of this provider.
+  String get password;
+
+  /// The parameter `context` of this provider.
+  BuildContext get context;
+}
+
+class _LoginBuildProviderElement extends AutoDisposeFutureProviderElement<bool>
+    with LoginBuildRef {
+  _LoginBuildProviderElement(super.provider);
+
+  @override
+  String get buildName => (origin as LoginBuildProvider).buildName;
+  @override
+  String get password => (origin as LoginBuildProvider).password;
+  @override
+  BuildContext get context => (origin as LoginBuildProvider).context;
+}
+
 String _$logoutBuildHash() => r'3eb75387c52d7cad9e338b89ec3482af03655273';
 
 /// See also [logoutBuild].
@@ -80,11 +393,11 @@ final logoutBuildProvider =
 );
 
 typedef LogoutBuildRef = AutoDisposeFutureProviderRef<Response<dynamic>>;
-String _$carsByIdHash() => r'049807bed2da7875f0025c720df954e21aea8075';
+String _$carsByIdHash() => r'755623fca1f50689235c3818d41504ca0d0f8aff';
 
 /// See also [carsById].
 @ProviderFor(carsById)
-final carsByIdProvider = AutoDisposeProvider<void>.internal(
+final carsByIdProvider = AutoDisposeFutureProvider<dynamic>.internal(
   carsById,
   name: r'carsByIdProvider',
   debugGetCreateSourceHash:
@@ -93,7 +406,7 @@ final carsByIdProvider = AutoDisposeProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef CarsByIdRef = AutoDisposeProviderRef<void>;
+typedef CarsByIdRef = AutoDisposeFutureProviderRef<dynamic>;
 String _$addCarsHash() => r'dfef9616bf61ee0355a753e0fbf14109ffcb00da';
 
 /// See also [addCars].

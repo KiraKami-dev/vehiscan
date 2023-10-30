@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../services/backend.dart';
 import '../../services/local_storage.dart';
 import '../../widgets/appbar.widget.dart';
 import '../../widgets/drawer.dart';
+import '../admin_record.dart/admin_records.dart';
 
 class UserRegistration extends ConsumerStatefulWidget {
   const UserRegistration({super.key});
@@ -15,13 +17,12 @@ class UserRegistration extends ConsumerStatefulWidget {
 }
 
 class _UserRegistrationState extends ConsumerState<UserRegistration> {
-  static const List<String> _kOptions = <String>[
-    'Kishor Kunj 5, virar (w)',
-    'Kishor Kunj 4, virar (w)',
-    'Kishor Kunj 3, virar (w)',
-  ];
+  final _name = TextEditingController();
+  final _password = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final buildingsReg =
+        ref.watch(registerBuildProvider(_name.text, _password.text, context));
     return Scaffold(
         appBar: const AppBarWidget(lead: false),
         endDrawer: NavDrawer(),
@@ -47,11 +48,12 @@ class _UserRegistrationState extends ConsumerState<UserRegistration> {
                 Container(
                   height: 30,
                   width: 250,
-                  child: const TextField(
+                  child: TextField(
                     cursorColor: Colors.black54,
                     textAlign: TextAlign.left,
+                    controller: _name,
                     // obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.apartment_rounded),
                       // iconColor: Colors.black,
                       // focusColor: Colors.black,
@@ -75,11 +77,12 @@ class _UserRegistrationState extends ConsumerState<UserRegistration> {
                 Container(
                   height: 30,
                   width: 250,
-                  child: const TextField(
+                  child: TextField(
+                    controller: _password,
                     cursorColor: Colors.black54,
                     textAlign: TextAlign.left,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       prefixIcon: Icon(IconlyLight.password),
                       // iconColor: Colors.black,
                       // focusColor: Colors.black,
@@ -104,11 +107,14 @@ class _UserRegistrationState extends ConsumerState<UserRegistration> {
                   textDirection: TextDirection.rtl,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => AdminRecords(),
-                      //   ),
-                      // );
+                      final regBuidling = ref.read(
+                          registerBuildProvider(_name.text, _password.text, context));
+                      
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => AdminRecords(),
+                        ),
+                      );
                     },
                     icon: const Icon(
                       IconlyLight.login,

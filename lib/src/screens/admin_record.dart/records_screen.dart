@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vehiscan/src/models/building_model.dart';
 import 'package:vehiscan/src/screens/admin_record.dart/admin_records.dart';
+import 'package:vehiscan/src/services/local_storage.dart';
 
+import '../../services/backend.dart';
 import '../../widgets/search_input.dart';
 
 class RecordScreen extends ConsumerStatefulWidget {
@@ -20,22 +24,23 @@ class _RecordScreenState extends ConsumerState<RecordScreen> {
   var vehicle = <String>[];
 
   @override
-    void initState() {
-      vehicle = items;
-      super.initState();
-    }
+  void initState() {
+    vehicle = items;
+    super.initState();
+  }
 
-    void filterSearchResults(String query) {
-      setState(() {
-        vehicle = items
-            .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      });
-    }
+  void filterSearchResults(String query) {
+    setState(() {
+      vehicle = items
+          .where((item) => item.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     // ref.watch(recordSwitch.notifier).update((state) => false);
+    final getAllCars = ref.watch(carsByIdProvider);
     return Column(
       children: [
         SearchInput(
@@ -44,22 +49,27 @@ class _RecordScreenState extends ConsumerState<RecordScreen> {
           onChanged: filterSearchResults,
         ),
         Expanded(
-          child: ListView.builder(
-            itemCount: vehicle.length,
-            itemBuilder: (context, index) {
-              final item = vehicle[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 4,
-                ),
-                child: ListTile(
-                  leading: const Icon(Icons.electric_bike_rounded),
-                  trailing: const Text("at 8:30 am"),
-                  title: Text(item),
-                ),
-              );
-            },
+          child: getAllCars.when(
+            data: (cars) => ListView.builder(
+              itemCount: cars.length,
+              itemBuilder: (context, index) {
+                final carItem = cars[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 4,
+                  ),
+                  child: ListTile(
+                    leading: carItem["iscar"] ? Icon(Icons.car_crash)
+                    : Icon(Icons.electric_bike_rounded),
+                    trailing: const Text("at 8:30 am"),
+                    title: Text(carItem["carnumber"]),
+                  ),
+                );
+              },
+            ),
+            error: (error, stackTrace) => Text('Error: $error $stackTrace'),
+            loading: () => Center(child: CircularProgressIndicator()),
           ),
         ),
       ],
