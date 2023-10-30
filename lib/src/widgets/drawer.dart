@@ -3,6 +3,7 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:vehiscan/src/screens/admin_record.dart/admin_login.dart';
 import 'package:vehiscan/src/screens/home_screen.dart';
 import 'package:vehiscan/src/screens/user_resgistration/user_reg.dart';
+import 'package:vehiscan/src/services/local_storage.dart';
 import 'package:vehiscan/src/services/utils.dart';
 
 class NavDrawer extends StatefulWidget {
@@ -15,6 +16,7 @@ class NavDrawer extends StatefulWidget {
 class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
+    final buildiingName = LocalStorageService.getSelectedBuilding();
     return Drawer(
       backgroundColor: Colors.white,
       elevation: 2,
@@ -28,6 +30,7 @@ class _NavDrawerState extends State<NavDrawer> {
             child: Image.network(
                 "https://img.freepik.com/free-vector/front-car-concept-illustration_114360-7978.jpg?w=1380&t=st=1696513992~exp=1696514592~hmac=14f7a429d85bf7aed10af0579c9f9c1690f829aeb184f6615d31cd37868fe825"),
           ),
+          Text(buildiingName,textAlign: TextAlign.center,),
           ListTile(
             trailing: Icon(IconlyBold.scan),
             title: const Text('Scan'),

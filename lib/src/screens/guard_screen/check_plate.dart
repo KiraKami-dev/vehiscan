@@ -7,12 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_scalable_ocr/flutter_scalable_ocr.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:vehiscan/src/screens/home_screen.dart';
+import 'package:vehiscan/src/services/backend.dart';
+import 'package:vehiscan/src/services/utils.dart';
 import 'package:vehiscan/src/widgets/appbar.widget.dart';
 
 class CheckPlate extends ConsumerStatefulWidget {
-  CheckPlate({
-    super.key,
-  });
+  CheckPlate({super.key, required this.carsNumbers});
+  final List<dynamic> carsNumbers;
 
   @override
   ConsumerState<CheckPlate> createState() => _CheckPlateState();
@@ -32,11 +33,11 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
     super.dispose();
   }
 
-  static const List<String> _numberplate = <String>[
-    'MH 48 BH 3551',
-    'MH 48 CD 2201',
-    'MH 48 32 1223',
-  ];
+  // static const List<String> _numberplate = <String>[
+  //   'MH 48 BH 3551',
+  //   'MH 48 CD 2201',
+  //   'MH 48 32 1223',
+  // ];
   @override
   Widget build(BuildContext context) {
     bool plateCheck = ref.watch(checkNumber);
@@ -87,6 +88,7 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
               child: TextField(
                 cursorColor: Colors.black54,
                 textAlign: TextAlign.center,
+                controller: vehicleNumberController,
                 decoration: InputDecoration(
                   // border: Border(bottom: 1),s
                   focusedBorder: UnderlineInputBorder(
@@ -108,15 +110,19 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
             // ),
             const Spacer(flex: 1),
 
-            StreamBuilder<String>(
+            StreamBuilder(
                 stream: controller.stream,
                 builder:
                     (BuildContext context, AsyncSnapshot<String> snapshot) {
                   String vehicleNumber =
                       snapshot.data!.replaceAll(RegExp(r'[^a-zA-Z0-9 ]'), '');
-                  if (_numberplate.contains(vehicleNumber)) {
+                  if (widget.carsNumbers.contains(vehicleNumber)) {
                     // Unhandled Exception: Tried to modify a provider while the widget tree was building.
-                    // ref.read(checkNumber.notifier).state = true;
+                    ref.read(checkNumber.notifier).state = true;
+                    showSnackBar(context, "Vehicle detected!");
+                    Timer(Duration(seconds: 8), () {
+                      ref.read(checkNumber.notifier).state = false;
+                    });
                   } else {
                     // Unhandled Exception: Tried to modify a provider while the widget tree was building.
                     // ref.read(checkNumber.notifier).state = false;
@@ -151,7 +157,16 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
                 ),
               ),
               onPressed: () {
-                ref.read(checkNumber.state).update((state) => true);
+                if (!widget.carsNumbers
+                    .contains(vehicleNumberController.text)) {
+                  ref.read(checkNumber.notifier).update((state) => false);
+                  showSnackBar(context, "Intruder!!");
+                } else {
+                  ref.read(checkNumber.notifier).update((state) => true);
+                  showSnackBar(context, "Vehicle detected!");
+                }
+                print("This is plate check : $plateCheck");
+                print(plateCheck);
               },
               child: const Text("Check Number Manually"),
             ),

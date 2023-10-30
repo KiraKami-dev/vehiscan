@@ -14,6 +14,8 @@ part 'backend.g.dart';
 final dio = Dio();
 const baseUrl = "http://192.168.0.105:8000/api";
 
+
+
 // void getAllbuilding() async {
 //   final userOrder = await dio.get('$baseUrl/buildings');
 // }
@@ -27,12 +29,23 @@ void showSnackBar(BuildContext context, String text) {
 int count(CountRef ref) => 0;
 
 @riverpod
-Future getAllBuild(GetAllBuildRef ref) async {
-  final response = await dio.get('$baseUrl/buildings');
-  final buildings = response.data["buildings"];
-  // print(response.data["buildings"]);
-  return buildings;
-  // return null;
+Future <List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
+  try {
+    final response = await dio.get('$baseUrl/buildings');
+
+    if (response.statusCode == 200) {
+      final List<dynamic> buildingList = response.data['buildings'];
+      final List<BuildingModel> buildings = buildingList
+          .map((buildingJson) => BuildingModel.fromJson(buildingJson))
+          .toList();
+
+      return buildings;
+    } else {
+      throw Exception("Failed to load data");
+    }
+  } catch (e) {
+    throw Exception("Error : $e");
+  }
 }
 
 // return BuildingModel(id: "123", name: "Select a Building");
@@ -105,7 +118,7 @@ Future carsById(CarsByIdRef ref) async {
   final selectedBuiling = LocalStorageService.getSelectedBuilding();
   final getAllcars = await dio
       .get("$baseUrl/buildings/0188edec-1e63-4995-91fc-7308a3f03b31/cars");
-  print("Json Decode");
+  
   return getAllcars.data["cars"];
 }
 

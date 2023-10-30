@@ -35,8 +35,8 @@ class BuildingModel {
     String toRawJson() => json.encode(toJson());
 
     factory BuildingModel.fromJson(Map<String, dynamic> json) => BuildingModel(
-        id: json["id"],
-        name: json["name"],
+        id: json["id"] ?? "",
+        name: json["name"] ?? "",
     );
 
     Map<String, dynamic> toJson() => {

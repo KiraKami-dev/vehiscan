@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -28,21 +29,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     'Kishor Kunj 4, virar (w)',
     'Kishor Kunj 3, virar (w)',
   ];
+  List<BuildingModel> buildingCars = [];
   @override
   Widget build(BuildContext context) {
     @override
     void initState() {
       super.initState();
     }
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     // final buildingsReg = ref.watch(registerBuildProvider);
     // final buildingLogin = ref.watch(loginBuildProvider);
     final buildings = ref.watch(getAllBuildProvider);
-    // final getAllCars = ref.watch(carsByIdProvider);
+    final getAllCars = ref.watch(carsByIdProvider);
     // final addCar = ref.watch(addCarsProvider);
     // final removeCar = ref.watch(removeCarsProvider);
-
+    final selectedBuilding = LocalStorageService.getSelectedBuilding();
     return Scaffold(
+      key: _scaffoldKey,
       appBar: const AppBarWidget(lead: false),
       endDrawer: NavDrawer(),
       body: Container(
@@ -66,19 +70,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: buildings.when(
                   data: (builds) {
-                    
                     return Autocomplete<BuildingModel>(
                       // displayStringForOption: (option) => option.name,
                       initialValue: TextEditingValue(
-                        text: LocalStorageService.getSelectedBuilding(),
+                        text: selectedBuilding,
                       ),
                       optionsBuilder:
                           (TextEditingValue textEditingValue) async {
                         if (textEditingValue.text == '') {
-                          return const Iterable<BuildingModel>.empty();
+                          return <BuildingModel>[];
                         }
-                        return builds["name"]
-                            .where((building) => building.name
+
+                        return builds
+                            .where((BuildingModel building) => building.name
                                 .toLowerCase()
                                 .contains(textEditingValue.text.toLowerCase()))
                             .toList();
@@ -100,7 +104,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               itemBuilder: (context, index) {
                                 final item = options.elementAt(index);
                                 return InkWell(
-                                  onTap: () => onSelected(item),
+                                  onTap: () {
+                                    onSelected(item);
+                                  },
                                   child: Padding(
                                     padding: const EdgeInsets.all(16),
                                     child: Text(item.name),
@@ -127,6 +133,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           () {
                             LocalStorageService.saveBuildingName(
                                 buildingName.name);
+
+                            LocalStorageService.saveBuildingId(buildingName.id);
                           },
                         );
                       },
@@ -142,29 +150,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               height: 40,
             ),
             // Spacer(flex: 1,),
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CheckPlate(),
+            getAllCars.when(
+              data: (cars) {
+                // print("This is cars List");
+                print(cars);
+                List<dynamic> carNumbers =
+                    cars.map((car) => car['carnumber']).toList();
+                
+                return Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CheckPlate(carsNumbers: carNumbers),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      IconlyBold.scan,
+                      color: Colors.white70,
                     ),
-                  );
-                },
-                icon: Icon(
-                  IconlyBold.scan,
-                  color: Colors.white70,
-                ),
-                label: const Text("Scan"),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    label: const Text("Scan"),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: Colors.purple,
+                      elevation: 1,
+                    ),
                   ),
-                  backgroundColor: Colors.purple,
-                  elevation: 1,
-                ),
-              ),
+                );
+              },
+              error: (error, stackTrace) => Text('Error: $error $stackTrace'),
+              loading: () => Center(child: CircularProgressIndicator()),
             ),
             Spacer(
               flex: 1,
