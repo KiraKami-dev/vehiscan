@@ -17,14 +17,13 @@ class RecordScreen extends ConsumerStatefulWidget {
   ConsumerState<RecordScreen> createState() => _RecordScreenState();
 }
 
-class _RecordScreenState extends ConsumerState<RecordScreen> {  
+class _RecordScreenState extends ConsumerState<RecordScreen> {
   final searchController = TextEditingController();
   final FocusNode searchTextFocusNode = FocusNode();
   var vehicle = <String>[];
 
   @override
   void initState() {
-    
     super.initState();
   }
 
@@ -38,7 +37,7 @@ class _RecordScreenState extends ConsumerState<RecordScreen> {
             setState(() {
               vehicle = cars
                   .where((item) =>
-                      item.contains(query.toUpperCase())? true : false)
+                      item.contains(query.toUpperCase()) ? true : false)
                   .toList();
             });
           }
@@ -50,24 +49,29 @@ class _RecordScreenState extends ConsumerState<RecordScreen> {
               onChanged: filterSearchResults,
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: cars.length,
-                itemBuilder: (context, index) {
-                  final carItem = cars[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0,
-                      vertical: 4,
-                    ),
-                    child: ListTile(
-                      leading: carItem["iscar"]
-                          ? const Icon(Icons.car_crash)
-                          : const Icon(Icons.electric_bike_rounded),
-                      trailing: const Text("at 8:30 am"),
-                      title: Text(carItem["carnumber"]),
-                    ),
-                  );
+              child: RefreshIndicator(
+                onRefresh: () {
+                  return ref.refresh(carsByIdProvider.future);
                 },
+                child: ListView.builder(
+                  itemCount: cars.length,
+                  itemBuilder: (context, index) {
+                    final carItem = cars[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 4,
+                      ),
+                      child: ListTile(
+                        leading: carItem["iscar"]
+                            ? const Icon(Icons.car_crash)
+                            : const Icon(Icons.electric_bike_rounded),
+                        trailing: const Text("at 8:30 am"),
+                        title: Text(carItem["carnumber"]),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ]);

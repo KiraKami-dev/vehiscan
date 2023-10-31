@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vehiscan/src/models/building_model.dart';
 import 'package:vehiscan/src/screens/admin_record.dart/admin_records.dart';
 
+import '../../services/backend.dart';
 import '../../services/local_storage.dart';
 import '../../widgets/appbar.widget.dart';
 import '../../widgets/drawer.dart';
@@ -15,13 +17,9 @@ class AdminLogin extends ConsumerStatefulWidget {
 }
 
 class _AdminLoginState extends ConsumerState<AdminLogin> {
-  static const List<String> _kOptions = <String>[
-    'Kishor Kunj 5, virar (w)',
-    'Kishor Kunj 4, virar (w)',
-    'Kishor Kunj 3, virar (w)',
-  ];
   @override
   Widget build(BuildContext context) {
+    final buildings = ref.watch(getAllBuildProvider);
     return Scaffold(
         appBar: const AppBarWidget(lead: false),
         endDrawer: NavDrawer(),
@@ -46,68 +44,80 @@ class _AdminLoginState extends ConsumerState<AdminLogin> {
                 Container(
                   width: 260,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Autocomplete<String>(
-                      initialValue: TextEditingValue(
-                          text: LocalStorageService.getSelectedBuilding()),
-                      optionsBuilder: (TextEditingValue textEditingValue) {
-                        if (textEditingValue.text == '') {
-                          return const Iterable<String>.empty();
-                        }
-                        return _kOptions.where((String option) {
-                          return option
-                              .toLowerCase()
-                              .contains(textEditingValue.text.toLowerCase());
-                        });
-                      },
-                      optionsViewBuilder: (context, onSelected, options) =>
-                          Align(
-                        alignment: Alignment.topLeft,
-                        child: Material(
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Container(
-                            height: 52.0 * options.length,
-                            width: 250,
-                            child: ListView.builder(
-                              itemCount: options.length,
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: false,
-                              itemBuilder: (context, index) {
-                                final String item = options.elementAt(index);
-                                return InkWell(
-                                  onTap: () => onSelected(item),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Text(item),
+                      padding: const EdgeInsets.all(8.0),
+                      child: buildings.when(
+                        data: (builds) {
+                          return Autocomplete<BuildingModel>(
+                            initialValue: TextEditingValue(
+                                text:
+                                    LocalStorageService.getSelectedBuilding()),
+                            optionsBuilder:
+                                (TextEditingValue textEditingValue) {
+                              if (textEditingValue.text == '') {
+                                return <BuildingModel>[];
+                              }
+                              return builds
+                                  .where((BuildingModel building) =>
+                                      building.name.toLowerCase().contains(
+                                          textEditingValue.text.toLowerCase()))
+                                  .toList();
+                            },
+                            optionsViewBuilder:
+                                (context, onSelected, options) => Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Container(
+                                  height: 52.0,
+                                  width: 250,
+                                  child: ListView.builder(
+                                    itemCount: options.length,
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: false,
+                                    itemBuilder: (context, index) {
+                                      final item = options.elementAt(index);
+                                      return InkWell(
+                                        onTap: () => onSelected(item),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16),
+                                          child: Text(item.name),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      fieldViewBuilder: (context, textEditingController,
-                          focusNode, onFieldSubmitted) {
-                        return TextField(
-                          controller: textEditingController,
-                          focusNode: focusNode,
-                          onEditingComplete: onFieldSubmitted,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.apartment_rounded),
-                          ),
-                        );
-                      },
-                      onSelected: (String buildingName) {
-                        setState(
-                          () {
-                            LocalStorageService.saveBuildingName(buildingName);
-                          },
-                        );
-                      },
-                    ),
-                  ),
+                            fieldViewBuilder: (context, textEditingController,
+                                focusNode, onFieldSubmitted) {
+                              return TextField(
+                                controller: textEditingController,
+                                focusNode: focusNode,
+                                onEditingComplete: onFieldSubmitted,
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.apartment_rounded),
+                                ),
+                              );
+                            },
+                            onSelected: (buildingName) {
+                              setState(
+                                () {
+                                  LocalStorageService.saveBuildingName(
+                                      buildingName.name);
+                                  LocalStorageService.saveBuildingId(
+                                      buildingName.id);
+                                },
+                              );
+                            },
+                          );
+                        },
+                        error: (error, stackTrace) =>
+                            Text('Error: $error $stackTrace'),
+                        loading: () =>
+                            Center(child: CircularProgressIndicator()),
+                      )),
                 ),
                 SizedBox(
                   height: 20,

@@ -14,8 +14,6 @@ part 'backend.g.dart';
 final dio = Dio();
 const baseUrl = "http://192.168.0.105:8000/api";
 
-
-
 // void getAllbuilding() async {
 //   final userOrder = await dio.get('$baseUrl/buildings');
 // }
@@ -29,7 +27,7 @@ void showSnackBar(BuildContext context, String text) {
 int count(CountRef ref) => 0;
 
 @riverpod
-Future <List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
+Future<List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
   try {
     final response = await dio.get('$baseUrl/buildings');
 
@@ -115,28 +113,29 @@ Future<Response> logoutBuild(LogoutBuildRef ref) async {
 
 @riverpod
 Future carsById(CarsByIdRef ref) async {
-  final selectedBuiling = LocalStorageService.getSelectedBuilding();
-  final getAllcars = await dio
-      .get("$baseUrl/buildings/0188edec-1e63-4995-91fc-7308a3f03b31/cars");
-  
-  return getAllcars.data["cars"];
+  final builingId = LocalStorageService.getSelectedId();
+  try {
+    final getAllcars = await dio.get("$baseUrl/buildings/$builingId/cars");
+    return getAllcars.data["cars"];
+  } catch (e) {
+    throw Exception(e);
+  }
 }
 
 @riverpod
 Future addCars(AddCarsRef ref, String carNumber, bool isCar) async {
   final buildingId = LocalStorageService.getSelectedId();
   final addCar = await dio.post(
-    "$baseUrl/buildings/0188edec-1e63-4995-91fc-7308a3f03b31/cars",
-    data: {'carNumber': '$carNumber', 'isCar': '$isCar'},
+    "$baseUrl/buildings/$buildingId/cars",
+    data: {'carNumber': carNumber, 'isCar': '$isCar'},
   );
-  print(addCar.data);
 }
 
 @riverpod
 Future removeCars(RemoveCarsRef ref, String carId) async {
   final buildingId = LocalStorageService.getSelectedId();
   final removeCar = await dio.delete(
-    "$baseUrl/buildings/0188edec-1e63-4995-91fc-7308a3f03b31/cars/$carId",
+    "$baseUrl/buildings/$buildingId/cars/$carId",
     // data: {'carNumber': '$carNumber', 'isCar': '$isCar'},
   );
   print("Car removed : ");

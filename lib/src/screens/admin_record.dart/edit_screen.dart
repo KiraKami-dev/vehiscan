@@ -51,36 +51,41 @@ class _EditScreenState extends ConsumerState<EditScreen> {
                 onChanged: filterSearchResults,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: cars.length,
-                  itemBuilder: (context, index) {
-                    final carItem = cars[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 4,
-                      ),
-                      child: ListTile(
-                        leading: carItem["iscar"]
-                          ? const Icon(Icons.car_crash)
-                          : const Icon(Icons.electric_bike_rounded),
-                        trailing: IconButton(
-                          icon: Icon(
-                            IconlyLight.delete,
-                            color: Colors.red,
-                          ),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  DeleteDialog(carId: carItem["id"]),
-                            );
-                          }, //@TODO
-                        ),
-                        title: Text(carItem["carnumber"]),
-                      ),
-                    );
+                child: RefreshIndicator(
+                  onRefresh: () {
+                    return ref.refresh(carsByIdProvider.future);
                   },
+                  child: ListView.builder(
+                    itemCount: cars.length,
+                    itemBuilder: (context, index) {
+                      final carItem = cars[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 4,
+                        ),
+                        child: ListTile(
+                          leading: carItem["iscar"]
+                            ? const Icon(Icons.car_crash)
+                            : const Icon(Icons.electric_bike_rounded),
+                          trailing: IconButton(
+                            icon: Icon(
+                              IconlyLight.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    DeleteDialog(carId: carItem["id"]),
+                              );
+                            }, //@TODO
+                          ),
+                          title: Text(carItem["carnumber"]),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

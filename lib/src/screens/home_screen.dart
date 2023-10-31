@@ -24,11 +24,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  static const List<String> _kOptions = <String>[
-    'Kishor Kunj 5, virar (w)',
-    'Kishor Kunj 4, virar (w)',
-    'Kishor Kunj 3, virar (w)',
-  ];
+  bool selectBuild = false;
   List<BuildingModel> buildingCars = [];
   @override
   Widget build(BuildContext context) {
@@ -36,6 +32,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     void initState() {
       super.initState();
     }
+
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     // final buildingsReg = ref.watch(registerBuildProvider);
@@ -153,7 +150,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             getAllCars.when(
               data: (cars) {
                 // print("This is cars List");
-                print(cars);
                 List<dynamic> carNumbers =
                     cars.map((car) => car['carnumber']).toList();
                 
@@ -163,7 +159,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => CheckPlate(carsNumbers: carNumbers),
+                          builder: (context) =>
+                              CheckPlate(carsNumbers: carNumbers),
                         ),
                       );
                     },
