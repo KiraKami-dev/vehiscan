@@ -139,12 +139,8 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
               height: 20,
             ),
             plateCheck
-                ? const Icon(IconlyBold.scan)
-                : const Icon(
-                    IconlyBold.danger,
-                    color: Colors.red,
-                    size: 44,
-                  ),
+                ? Image.asset("assets/green-checkmark-line-icon.png",height: 40)
+                : Image.asset("assets/red-x-line-icon.png",height: 40),
             // const SizedBox(
             //   width: 40,
             // ),

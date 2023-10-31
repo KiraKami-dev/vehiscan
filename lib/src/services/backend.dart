@@ -12,7 +12,8 @@ import 'local_storage.dart';
 part 'backend.g.dart';
 
 final dio = Dio();
-const baseUrl = "http://192.168.0.105:8000/api";
+// const baseUrl = "http://192.168.0.105:8000/api";
+const baseUrl = "http://192.168.148.34:8000/api";
 
 // void getAllbuilding() async {
 //   final userOrder = await dio.get('$baseUrl/buildings');
