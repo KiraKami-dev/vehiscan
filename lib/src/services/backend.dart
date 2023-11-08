@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vehiscan/src/models/building_model.dart';
 import 'package:vehiscan/src/services/utils.dart';
@@ -8,12 +9,33 @@ import 'package:vehiscan/src/utils/global_methods.dart';
 
 import '../models/cars_model.dart';
 import 'local_storage.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 
 part 'backend.g.dart';
 
 final dio = Dio();
-// const baseUrl = "http://192.168.0.105:8000/api";
-const baseUrl = "http://192.168.148.34:8000/api";
+const baseUrl = "http://192.168.0.102:8000/api";
+
+// @riverpod
+// Future<String> ipUrl(IpUrlRef ref) async {
+//   try {
+//     final info = NetworkInfo();
+//     final wifiIP = await info.getWifiGatewayIP();
+//     print(wifiIP);
+//     return "http://$wifiIP:8000/api";
+//   } catch (e) {
+//     Fluttertoast.showToast(
+//         msg: "Connect to wifi",
+//         toastLength: Toast.LENGTH_SHORT,
+//         gravity: ToastGravity.CENTER,
+//         timeInSecForIosWeb: 1,
+//         backgroundColor: Colors.red,
+//         textColor: Colors.white,
+//         fontSize: 16.0);
+
+//     return "null";
+//   }
+// }
 
 // void getAllbuilding() async {
 //   final userOrder = await dio.get('$baseUrl/buildings');
@@ -24,14 +46,12 @@ void showSnackBar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
-@riverpod
-int count(CountRef ref) => 0;
 
 @riverpod
 Future<List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
   try {
+    
     final response = await dio.get('$baseUrl/buildings');
-
     if (response.statusCode == 200) {
       final List<dynamic> buildingList = response.data['buildings'];
       final List<BuildingModel> buildings = buildingList

@@ -50,7 +50,12 @@ dependencies:
   #http 
   dio: ^5.3.3
 
+  #getIp
+  network_info_plus: ^4.1.0
   
+  #Toast
+  fluttertoast: ^8.2.2
+
   toggle_switch: ^2.1.0
 
 
@@ -62,6 +67,8 @@ dev_dependencies:
   build_runner: ^2.4.6
   riverpod_lint: ^2.0.4
   riverpod_generator: ^2.3.1
+
+
 
 
   flutter_test:

@@ -6,25 +6,12 @@ part of 'backend.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$countHash() => r'eedd098dbf3b530e2ed3cf34b09f97f93bef2648';
-
-/// See also [count].
-@ProviderFor(count)
-final countProvider = AutoDisposeProvider<int>.internal(
-  count,
-  name: r'countProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$countHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef CountRef = AutoDisposeProviderRef<int>;
-String _$getAllBuildHash() => r'dd7a94a779d331c3519f35fb9ac4469b1821c9d0';
+String _$getAllBuildHash() => r'bea10df5d4d8249e26a0a2ca357efb22bfaa8b9e';
 
 /// See also [getAllBuild].
 @ProviderFor(getAllBuild)
-final getAllBuildProvider = AutoDisposeFutureProvider<dynamic>.internal(
+final getAllBuildProvider =
+    AutoDisposeFutureProvider<List<BuildingModel>>.internal(
   getAllBuild,
   name: r'getAllBuildProvider',
   debugGetCreateSourceHash:
@@ -33,7 +20,7 @@ final getAllBuildProvider = AutoDisposeFutureProvider<dynamic>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef GetAllBuildRef = AutoDisposeFutureProviderRef<dynamic>;
+typedef GetAllBuildRef = AutoDisposeFutureProviderRef<List<BuildingModel>>;
 String _$registerBuildHash() => r'1ca96b4eefc991c5d42462ccd5a1250d9bcfc14c';
 
 /// Copied from Dart SDK
@@ -392,7 +379,7 @@ final logoutBuildProvider =
 );
 
 typedef LogoutBuildRef = AutoDisposeFutureProviderRef<Response<dynamic>>;
-String _$carsByIdHash() => r'755623fca1f50689235c3818d41504ca0d0f8aff';
+String _$carsByIdHash() => r'e2759d7e549ebcd78293a1aacc7d4e96a52bf77d';
 
 /// See also [carsById].
 @ProviderFor(carsById)
@@ -406,7 +393,7 @@ final carsByIdProvider = AutoDisposeFutureProvider<dynamic>.internal(
 );
 
 typedef CarsByIdRef = AutoDisposeFutureProviderRef<dynamic>;
-String _$addCarsHash() => r'e2f007cdc79c1d8db5500069f3cd84a44f4a23f6';
+String _$addCarsHash() => r'43ad7750099f2f7c8d1b6f86166824e25b5f81a2';
 
 /// See also [addCars].
 @ProviderFor(addCars)
@@ -550,7 +537,7 @@ class _AddCarsProviderElement extends AutoDisposeFutureProviderElement<dynamic>
   bool get isCar => (origin as AddCarsProvider).isCar;
 }
 
-String _$removeCarsHash() => r'59136c9fecc9dbfd0d0ddf9cc31e7ea7a18f5197';
+String _$removeCarsHash() => r'3c7cd6d68ca027b2ab4ffc06b2fb31595fc6baf3';
 
 /// See also [removeCars].
 @ProviderFor(removeCars)
