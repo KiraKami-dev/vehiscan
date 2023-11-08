@@ -30,61 +30,63 @@ class _AdminRecordsState extends ConsumerState<AdminRecords> {
     return Scaffold(
         appBar: AppBarWidget(lead: false),
         endDrawer: NavDrawer(),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Icon(
-                Icons.apartment_rounded,
-                size: 30,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Icon(
+                  Icons.apartment_rounded,
+                  size: 30,
+                ),
               ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Icon(Icons.apartment_rounded),
-                  Text(
-                    buildingName,
-                    softWrap: true,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
-                      isRecord ? "Records" : "Edit \n Records",
-                      overflow: TextOverflow.ellipsis,
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Icon(Icons.apartment_rounded),
+                    Text(
+                      buildingName,
                       softWrap: true,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Text(
+                        isRecord ? "Records" : "Edit \n Records",
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height - 182,
-              child: PageView(
-                onPageChanged: (value) {
-                  ref.read(recordSwitch.notifier).update((state) => !state);
-                },
-                controller: pageController,
-                children: [
-                  RecordScreen(),
-                  EditScreen(),
-                ],
+              SizedBox(
+                height: 20,
               ),
-            ),
-          ],
+              Container(
+                height: MediaQuery.of(context).size.height - 182,
+                child: PageView(
+                  onPageChanged: (value) {
+                    ref.read(recordSwitch.notifier).update((state) => !state);
+                  },
+                  controller: pageController,
+                  children: [
+                    RecordScreen(),
+                    EditScreen(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         floatingActionButton: !isRecord
             ? FloatingActionButton(

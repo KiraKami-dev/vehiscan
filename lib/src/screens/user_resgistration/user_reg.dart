@@ -21,8 +21,6 @@ class _UserRegistrationState extends ConsumerState<UserRegistration> {
   final _password = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final buildingsReg =
-        ref.watch(registerBuildProvider(_name.text, _password.text, context));
     return Scaffold(
         appBar: const AppBarWidget(lead: false),
         endDrawer: NavDrawer(),
@@ -107,9 +105,9 @@ class _UserRegistrationState extends ConsumerState<UserRegistration> {
                   textDirection: TextDirection.rtl,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      final regBuidling = ref.read(
-                          registerBuildProvider(_name.text, _password.text, context));
-                      
+                      final regBuidling = ref.read(registerBuildProvider(
+                          _name.text, _password.text, context));
+
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => AdminRecords(),

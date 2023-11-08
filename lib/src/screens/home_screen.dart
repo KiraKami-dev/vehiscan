@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vehiscan/src/app.dart';
 import 'package:vehiscan/src/models/building_model.dart';
 import 'package:vehiscan/src/screens/admin_record.dart/admin_login.dart';
@@ -25,7 +26,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool selectBuild = false;
-  List<BuildingModel> buildingCars = [];
   @override
   Widget build(BuildContext context) {
     @override
@@ -42,6 +42,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // final addCar = ref.watch(addCarsProvider);
     // final removeCar = ref.watch(removeCarsProvider);
     final selectedBuilding = LocalStorageService.getSelectedBuilding();
+    if (selectedBuilding.isEmpty) {
+      selectBuild = false;
+    } else {
+      selectBuild = true;
+    }
     return Scaffold(
       key: _scaffoldKey,
       appBar: const AppBarWidget(lead: false),
@@ -57,9 +62,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               flex: 1,
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Image.asset("assets/Logo.jpg")
-            ),
+                padding: const EdgeInsets.all(16.0),
+                child: Image.asset("assets/Logo.jpg")),
             Container(
               width: 260,
               child: Padding(
@@ -131,6 +135,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 buildingName.name);
 
                             LocalStorageService.saveBuildingId(buildingName.id);
+                            selectBuild = true;
                           },
                         );
                       },
@@ -138,7 +143,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   },
                   error: (error, stackTrace) =>
                       Text('Error: $error $stackTrace'),
-                  loading: () => Center(child: CircularProgressIndicator()),
+                  loading: () => const Center(child: CircularProgressIndicator()),
                 ),
               ),
             ),
@@ -146,41 +151,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               height: 40,
             ),
             // Spacer(flex: 1,),
-            getAllCars.when(
-              data: (cars) {
-                // print("This is cars List");
-                List<dynamic> carNumbers =
-                    cars.map((car) => car['carnumber']).toList();
-                
-                return Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CheckPlate(carsNumbers: carNumbers),
-                        ),
-                      );
-                    },
-                    icon: Icon(
-                      IconlyBold.scan,
-                      color: Colors.white70,
-                    ),
-                    label: const Text("Scan"),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  if (!selectBuild) {
+                    Fluttertoast.showToast(
+                        msg: "Select building first!",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CheckPlate(),
                       ),
-                      backgroundColor: Colors.purple,
-                      elevation: 1,
-                    ),
+                    );
+                  }
+                },
+                icon: Icon(
+                  IconlyBold.scan,
+                  color: Colors.white70,
+                ),
+                label: const Text("Scan"),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                );
-              },
-              error: (error, stackTrace) => Text('Error: $error $stackTrace'),
-              loading: () => Center(child: CircularProgressIndicator()),
+                  backgroundColor: Colors.purple,
+                  elevation: 1,
+                ),
+              ),
             ),
+
             Spacer(
               flex: 1,
             ),
