@@ -92,7 +92,8 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
             height: double.maxFinite,
             child: Column(
               children: [
-                Center(child: Text(buildingName)),
+                SizedBox(height: 20),
+                Center(child: Text(buildingName,style: TextStyle(fontSize: 20),)),
                 Container(
                   // height: 400,
                   // width: 350,

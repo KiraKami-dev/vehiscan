@@ -36,9 +36,7 @@ class _UserRegistrationState extends ConsumerState<UserRegistration> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Image.network(
-                    "https://img.freepik.com/free-vector/front-car-concept-illustration_114360-7978.jpg?w=1380&t=st=1696513992~exp=1696514592~hmac=14f7a429d85bf7aed10af0579c9f9c1690f829aeb184f6615d31cd37868fe825",
-                  ),
+                  child: Image.asset("assets/Logo.jpg"),
                 ),
                 const SizedBox(
                   height: 20,

@@ -15,6 +15,7 @@ import 'package:vehiscan/src/services/local_storage.dart';
 import 'package:vehiscan/src/widgets/appbar.widget.dart';
 import 'package:vehiscan/src/widgets/drawer.dart';
 
+import '../../main.dart';
 import '../services/utils.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -26,14 +27,14 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool selectBuild = false;
-  @override
+  
   Widget build(BuildContext context) {
     @override
     void initState() {
       super.initState();
     }
 
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    
 
     // final buildingsReg = ref.watch(registerBuildProvider);
     // final buildingLogin = ref.watch(loginBuildProvider);
@@ -47,6 +48,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     } else {
       selectBuild = true;
     }
+
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       key: _scaffoldKey,
       appBar: const AppBarWidget(lead: false),
@@ -148,7 +151,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
             SizedBox(
-              height: 40,
+              height: 20,
             ),
             // Spacer(flex: 1,),
             Directionality(

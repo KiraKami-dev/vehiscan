@@ -17,10 +17,24 @@ class AdminLogin extends ConsumerStatefulWidget {
 }
 
 class _AdminLoginState extends ConsumerState<AdminLogin> {
-  @override
+  bool selectBuild = false;
+  
   Widget build(BuildContext context) {
+    @override
+    void initState() {
+      super.initState();
+    }
+
     final buildings = ref.watch(getAllBuildProvider);
+    final selectedBuilding = LocalStorageService.getSelectedBuilding();
+    if (selectedBuilding.isEmpty) {
+      selectBuild = false;
+    } else {
+      selectBuild = true;
+    }
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: _scaffoldKey,
         appBar: const AppBarWidget(lead: false),
         endDrawer: NavDrawer(),
         body: Container(
@@ -34,89 +48,174 @@ class _AdminLoginState extends ConsumerState<AdminLogin> {
                   flex: 1,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Image.asset("assets/Logo.jpg")
-                ),
+                    padding: const EdgeInsets.all(16.0),
+                    child: Image.asset("assets/Logo.jpg")),
                 const SizedBox(
                   height: 20,
                 ),
+                // Container(
+                //   width: 260,
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: buildings.when(
+                //       data: (builds) {
+                //         return Autocomplete<BuildingModel>(
+                //           initialValue: TextEditingValue(
+                //               text: LocalStorageService.getSelectedBuilding()),
+                //           optionsBuilder: (TextEditingValue textEditingValue) {
+                //             if (textEditingValue.text == '') {
+                //               return <BuildingModel>[];
+                //             }
+                //             return builds
+                //                 .where((BuildingModel building) => building.name
+                //                     .toLowerCase()
+                //                     .contains(
+                //                         textEditingValue.text.toLowerCase()))
+                //                 .toList();
+                //           },
+                //           optionsViewBuilder: (context, onSelected, options) =>
+                //               Align(
+                //             alignment: Alignment.topLeft,
+                //             child: Material(
+                //               shape: const RoundedRectangleBorder(
+                //                   borderRadius:
+                //                       BorderRadius.all(Radius.circular(10))),
+                //               child: Container(
+                //                 height: 52.0,
+                //                 width: 250,
+                //                 child: ListView.builder(
+                //                   itemCount: options.length,
+                //                   padding: EdgeInsets.zero,
+                //                   shrinkWrap: false,
+                //                   itemBuilder: (context, index) {
+                //                     final item = options.elementAt(index);
+                //                     return InkWell(
+                //                       onTap: () => onSelected(item),
+                //                       child: Padding(
+                //                         padding: const EdgeInsets.all(16),
+                //                         child: Text(item.name),
+                //                       ),
+                //                     );
+                //                   },
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //           fieldViewBuilder: (context, textEditingController,
+                //               focusNode, onFieldSubmitted) {
+                //             return TextField(
+                //               controller: textEditingController,
+                //               focusNode: focusNode,
+                //               onEditingComplete: onFieldSubmitted,
+                //               decoration: InputDecoration(
+                //                 prefixIcon: Icon(Icons.apartment_rounded),
+                //               ),
+                //             );
+                //           },
+                //           onSelected: (buildingName) {
+                //             setState(
+                //               () {
+                //                 LocalStorageService.saveBuildingName(
+                //                     buildingName.name);
+                //                 LocalStorageService.saveBuildingId(
+                //                     buildingName.id);
+                //               },
+                //             );
+                //           },
+                //         );
+                //       },
+                //       error: (error, stackTrace) =>
+                //           Text('Error: $error $stackTrace'),
+                //       loading: () => Center(child: CircularProgressIndicator()),
+                //     ),
+                //   ),
+                // ),
+
                 Container(
                   width: 260,
                   child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: buildings.when(
-                        data: (builds) {
-                          return Autocomplete<BuildingModel>(
-                            initialValue: TextEditingValue(
-                                text:
-                                    LocalStorageService.getSelectedBuilding()),
-                            optionsBuilder:
-                                (TextEditingValue textEditingValue) {
-                              if (textEditingValue.text == '') {
-                                return <BuildingModel>[];
-                              }
-                              return builds
-                                  .where((BuildingModel building) =>
-                                      building.name.toLowerCase().contains(
-                                          textEditingValue.text.toLowerCase()))
-                                  .toList();
-                            },
-                            optionsViewBuilder:
-                                (context, onSelected, options) => Align(
-                              alignment: Alignment.topLeft,
-                              child: Material(
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Container(
-                                  height: 52.0,
-                                  width: 250,
-                                  child: ListView.builder(
-                                    itemCount: options.length,
-                                    padding: EdgeInsets.zero,
-                                    shrinkWrap: false,
-                                    itemBuilder: (context, index) {
-                                      final item = options.elementAt(index);
-                                      return InkWell(
-                                        onTap: () => onSelected(item),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16),
-                                          child: Text(item.name),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: buildings.when(
+                      data: (builds) {
+                        return Autocomplete<BuildingModel>(
+                          // displayStringForOption: (option) => option.name,
+                          initialValue: TextEditingValue(
+                            text: selectedBuilding,
+                          ),
+                          optionsBuilder:
+                              (TextEditingValue textEditingValue) async {
+                            if (textEditingValue.text == '') {
+                              return <BuildingModel>[];
+                            }
+
+                            return builds
+                                .where((BuildingModel building) => building.name
+                                    .toLowerCase()
+                                    .contains(
+                                        textEditingValue.text.toLowerCase()))
+                                .toList();
+                          },
+                          optionsViewBuilder: (context, onSelected, options) =>
+                              Align(
+                            alignment: Alignment.topLeft,
+                            child: Material(
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              child: Container(
+                                height: 52.0,
+                                width: 250,
+                                child: ListView.builder(
+                                  itemCount: options.length,
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: false,
+                                  itemBuilder: (context, index) {
+                                    final item = options.elementAt(index);
+                                    return InkWell(
+                                      onTap: () {
+                                        onSelected(item);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Text(item.name),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             ),
-                            fieldViewBuilder: (context, textEditingController,
-                                focusNode, onFieldSubmitted) {
-                              return TextField(
-                                controller: textEditingController,
-                                focusNode: focusNode,
-                                onEditingComplete: onFieldSubmitted,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.apartment_rounded),
-                                ),
-                              );
-                            },
-                            onSelected: (buildingName) {
-                              setState(
-                                () {
-                                  LocalStorageService.saveBuildingName(
-                                      buildingName.name);
-                                  LocalStorageService.saveBuildingId(
-                                      buildingName.id);
-                                },
-                              );
-                            },
-                          );
-                        },
-                        error: (error, stackTrace) =>
-                            Text('Error: $error $stackTrace'),
-                        loading: () =>
-                            Center(child: CircularProgressIndicator()),
-                      )),
+                          ),
+                          fieldViewBuilder: (context, textEditingController,
+                              focusNode, onFieldSubmitted) {
+                            return TextField(
+                              controller: textEditingController,
+                              focusNode: focusNode,
+                              onEditingComplete: onFieldSubmitted,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.apartment_rounded),
+                              ),
+                            );
+                          },
+                          onSelected: (buildingName) {
+                            setState(
+                              () {
+                                LocalStorageService.saveBuildingName(
+                                    buildingName.name);
+
+                                LocalStorageService.saveBuildingId(
+                                    buildingName.id);
+                                selectBuild = true;
+                              },
+                            );
+                          },
+                        );
+                      },
+                      error: (error, stackTrace) =>
+                          Text('Error: $error $stackTrace'),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 20,
