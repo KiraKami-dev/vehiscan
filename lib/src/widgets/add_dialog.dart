@@ -18,7 +18,7 @@ class _AddDialogState extends ConsumerState<AddDialog> {
   bool isCar = false;
   @override
   Widget build(BuildContext context) {
-    final edittingController = TextEditingController();
+    // final edittingController = TextEditingController();
     return Dialog(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -64,6 +64,13 @@ class _AddDialogState extends ConsumerState<AddDialog> {
               child: TextField(
                 controller: vehiNum,
                 textAlign: TextAlign.center,
+                textInputAction: TextInputAction.go,
+                onChanged: (value) {
+                  vehiNum.value = TextEditingValue(
+                      text: value.toUpperCase(),
+                      selection: vehiNum.selection);
+                },
+                textCapitalization: TextCapitalization.characters,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(width: 1, color: Colors.black),
@@ -117,7 +124,8 @@ class _AddDialogState extends ConsumerState<AddDialog> {
                 SimpleBtn1(
                     text: " Add ",
                     onPressed: () {
-                      ref.read(addCarsProvider(vehiNum.text.toUpperCase(),isCar));
+                      ref.read(
+                          addCarsProvider(vehiNum.text.toUpperCase(), isCar));
                       Navigator.of(context).pop();
                       final snackBar = SnackBar(
                         content: const Text('New Vehicle added!'),

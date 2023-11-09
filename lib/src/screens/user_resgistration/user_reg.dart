@@ -107,7 +107,7 @@ class _UserRegistrationState extends ConsumerState<UserRegistration> {
                     onPressed: () {
                       final regBuidling = ref.read(registerBuildProvider(
                           _name.text, _password.text, context));
-
+                      LocalStorageService.saveBuildingName(_name.text);
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => AdminRecords(),

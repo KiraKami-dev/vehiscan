@@ -14,7 +14,8 @@ import 'package:network_info_plus/network_info_plus.dart';
 part 'backend.g.dart';
 
 final dio = Dio();
-const baseUrl = "http://192.168.0.102:8000/api";
+const ipAddress = "192.168.21.34";
+const baseUrl = "http://$ipAddress:8000/api";
 
 // @riverpod
 // Future<String> ipUrl(IpUrlRef ref) async {
@@ -46,11 +47,9 @@ void showSnackBar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
-
 @riverpod
 Future<List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
   try {
-    
     final response = await dio.get('$baseUrl/buildings');
     if (response.statusCode == 200) {
       final List<dynamic> buildingList = response.data['buildings'];
@@ -77,11 +76,11 @@ Future<bool> registerBuild(RegisterBuildRef ref, String buildName,
       data: {'name': "$buildName", 'password': "$password"});
 
   if (register.statusCode == 200) {
-    showSnackBar(context, "Registered Building!");
     LocalStorageService.saveBuildingName(buildName);
+    // showSnackBar(context, "Registered Building!");
     return true;
   } else {
-    showSnackBar(context, "Error while registering!");
+    // showSnackBar(context, "Error while registering!");
     return false;
   }
 }

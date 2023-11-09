@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'VehiScan',
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: HomeScreen(),      
       theme: ThemeData(
         scaffoldBackgroundColor: Utils.appTheme,
       ),

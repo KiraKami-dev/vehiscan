@@ -21,7 +21,7 @@ final getAllBuildProvider =
 );
 
 typedef GetAllBuildRef = AutoDisposeFutureProviderRef<List<BuildingModel>>;
-String _$registerBuildHash() => r'1ca96b4eefc991c5d42462ccd5a1250d9bcfc14c';
+String _$registerBuildHash() => r'04ac8df1fcb11a66c7e13e3458bbeda7a377a918';
 
 /// Copied from Dart SDK
 class _SystemHash {

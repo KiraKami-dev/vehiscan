@@ -20,7 +20,7 @@ class RecordScreen extends ConsumerStatefulWidget {
 class _RecordScreenState extends ConsumerState<RecordScreen> {
   final searchController = TextEditingController();
   final FocusNode searchTextFocusNode = FocusNode();
-  var vehicle = <String>[];
+  var vehicle = [];
 
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _RecordScreenState extends ConsumerState<RecordScreen> {
     final getAllCars = ref.watch(carsByIdProvider);
     return getAllCars.when(
         data: (cars) {
-          void filterSearchResults(String query) {
+          void filterSearchResults(String query, cars) {
             setState(() {
               vehicle = cars
                   .where((item) =>
@@ -46,7 +46,7 @@ class _RecordScreenState extends ConsumerState<RecordScreen> {
             SearchInput(
               textController: searchController,
               hintText: "Search",
-              onChanged: filterSearchResults,
+              onChanged: () => filterSearchResults(searchController.text,cars),
             ),
             Expanded(
               child: RefreshIndicator(
@@ -66,7 +66,7 @@ class _RecordScreenState extends ConsumerState<RecordScreen> {
                         leading: carItem["iscar"]
                             ? const Icon(Icons.car_crash)
                             : const Icon(Icons.electric_bike_rounded),
-                        trailing: const Text("at 8:30 am"),
+                        // trailing: const Text("at 8:30 am"),
                         title: Text(carItem["carnumber"]),
                       ),
                     );
