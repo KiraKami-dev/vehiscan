@@ -42,8 +42,8 @@ const baseUrl = "http://$ipAddress:8000/api";
 //   final userOrder = await dio.get('$baseUrl/buildings');
 // }
 // flutter pub run build_runner watch
-void showSnackBar(BuildContext context, String text) {
-  final snackBar = SnackBar(content: Text(text));
+void showSnackBar(BuildContext context, String text,bool success) {
+  final snackBar = SnackBar(content: Text(text),backgroundColor: success ? Colors.green : Colors.redAccent,);
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
@@ -99,12 +99,12 @@ Future<bool> loginBuild(LoginBuildRef ref, String buildName, String password,
           },
         ));
     if (login.statusCode == 200) {
-      showSnackBar(context, "Login Successful!");
+      // showSnackBar(context, "Login Successful!");
       LocalStorageService.saveBuildingName(buildName);
       print("Login Successful!");
       return true;
     } else {
-      showSnackBar(context, "Error while login!");
+      // showSnackBar(context, "Error while login!");
       return false;
     }
   } catch (e) {

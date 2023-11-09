@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_scalable_ocr/flutter_scalable_ocr.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:vehiscan/src/screens/home_screen.dart';
 import 'package:vehiscan/src/services/backend.dart';
@@ -32,7 +33,6 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
   String carCheck = "";
   // final testList = ["MH40JU2021"];
   void setText(String value, List<dynamic> carNumbers) {
-    
     SchedulerBinding.instance.addPostFrameCallback((_) {
       setState(() {
         carCheck = value;
@@ -46,6 +46,15 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
         setState(() {
           plateCheckTest = true;
         });
+        Fluttertoast.showToast(
+          msg: "Vehicle allowed",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
         Timer(Duration(seconds: 5), () {
           setState(() {
             plateCheckTest = false;
@@ -79,7 +88,7 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
 
           if (carNumbers.contains(carCheck)) {
             ref.read(checkNumber.notifier).state = true;
-            showSnackBar(context, "Vehicle detected!");
+            showSnackBar(context, "Vehicle detected!",true);
             Timer(const Duration(seconds: 5), () {
               ref.read(checkNumber.notifier).state = false;
             });
@@ -93,7 +102,11 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
             child: Column(
               children: [
                 SizedBox(height: 20),
-                Center(child: Text(buildingName,style: TextStyle(fontSize: 20),)),
+                Center(
+                    child: Text(
+                  buildingName,
+                  style: TextStyle(fontSize: 20),
+                )),
                 Container(
                   // height: 400,
                   // width: 350,
@@ -217,7 +230,7 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
                       // ref.read(checkNumber.notifier).update((state) => true);
                       setState(() {
                         manualCheck = true;
-                        showSnackBar(context, "Vehicle detected!");
+                        showSnackBar(context, "Vehicle detected!",true);
                         Timer(const Duration(seconds: 5), () {
                           // ref.read(checkNumber.notifier).state = false;
                           manualCheck = false;
@@ -228,7 +241,7 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
                         manualCheck = false;
                       });
                       // ref.read(checkNumber.notifier).update((state) => false);
-                      showSnackBar(context, "Intruder!!");
+                      showSnackBar(context, "Intruder!!",false);
                     }
                     // print("This is plate check : $plateCheck");
                     // print(plateCheck);
