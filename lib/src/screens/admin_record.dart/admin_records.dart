@@ -25,8 +25,7 @@ class _AdminRecordsState extends ConsumerState<AdminRecords> {
   Widget build(BuildContext context) {
     final PageController pageController = PageController();
     bool isRecord = ref.watch(recordSwitch);
-    String buildingName = LocalStorageService.getSelectedBuilding();
-    print(isRecord);
+    String buildingName = LocalStorageService.getSelectedBuilding();    
     return Scaffold(
         appBar: AppBarWidget(lead: false),
         endDrawer: NavDrawer(),

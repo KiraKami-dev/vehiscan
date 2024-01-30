@@ -1,51 +1,31 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vehiscan/src/models/building_model.dart';
-import 'package:vehiscan/src/services/utils.dart';
-import 'package:vehiscan/src/utils/global_methods.dart';
-
-import '../models/cars_model.dart';
 import 'local_storage.dart';
-import 'package:network_info_plus/network_info_plus.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 part 'backend.g.dart';
 
 final dio = Dio();
-const ipAddress = "192.168.21.34";
-const baseUrl = "http://$ipAddress:8000/api";
+// const ipAddress = "13.233.186.190";
 
-// @riverpod
-// Future<String> ipUrl(IpUrlRef ref) async {
-//   try {
-//     final info = NetworkInfo();
-//     final wifiIP = await info.getWifiGatewayIP();
-//     print(wifiIP);
-//     return "http://$wifiIP:8000/api";
-//   } catch (e) {
-//     Fluttertoast.showToast(
-//         msg: "Connect to wifi",
-//         toastLength: Toast.LENGTH_SHORT,
-//         gravity: ToastGravity.CENTER,
-//         timeInSecForIosWeb: 1,
-//         backgroundColor: Colors.red,
-//         textColor: Colors.white,
-//         fontSize: 16.0);
+// const baseUrl = "http://$ipAddress:8000/api";
+final baseUrl = dotenv.env['AWS_URL'];
 
-//     return "null";
-//   }
-// }
-
-// void getAllbuilding() async {
-//   final userOrder = await dio.get('$baseUrl/buildings');
-// }
-// flutter pub run build_runner watch
-void showSnackBar(BuildContext context, String text,bool success) {
-  final snackBar = SnackBar(content: Text(text),backgroundColor: success ? Colors.green : Colors.redAccent,);
+void showSnackBar(BuildContext context, String text, bool success) {
+  final snackBar = SnackBar(
+    content: Text(text),
+    backgroundColor: success ? Colors.green : Colors.redAccent,
+  );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
+
+final isAuth = StateProvider<bool>((ref) => true);
 
 @riverpod
 Future<List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
@@ -56,7 +36,6 @@ Future<List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
       final List<BuildingModel> buildings = buildingList
           .map((buildingJson) => BuildingModel.fromJson(buildingJson))
           .toList();
-
       return buildings;
     } else {
       throw Exception("Failed to load data");
@@ -66,14 +45,19 @@ Future<List<BuildingModel>> getAllBuild(GetAllBuildRef ref) async {
   }
 }
 
-// return BuildingModel(id: "123", name: "Select a Building");
-// }
 
 @riverpod
 Future<bool> registerBuild(RegisterBuildRef ref, String buildName,
     String password, BuildContext context) async {
-  final register = await dio.post('$baseUrl/buildings/register',
-      data: {'name': "$buildName", 'password': "$password"});
+  // final dio = Dio(options);
+  Map<String, dynamic> body = {
+    "buildingName": buildName,
+    "password": password,
+  };
+
+  print(body);
+  final register =
+      await dio.post('$baseUrl/buildings/register', data: jsonEncode(body));
 
   if (register.statusCode == 200) {
     LocalStorageService.saveBuildingName(buildName);
@@ -86,45 +70,54 @@ Future<bool> registerBuild(RegisterBuildRef ref, String buildName,
 }
 
 @riverpod
-Future<bool> loginBuild(LoginBuildRef ref, String buildName, String password,
-    BuildContext context) async {
-  try {
-    final login = await dio.get('$baseUrl/buildings/login',
-        data:
-            jsonEncode({'buildingName': "$buildName", 'password': "$password"}),
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        ));
-    if (login.statusCode == 200) {
-      // showSnackBar(context, "Login Successful!");
-      LocalStorageService.saveBuildingName(buildName);
-      print("Login Successful!");
-      return true;
-    } else {
-      // showSnackBar(context, "Error while login!");
-      return false;
+Future<void> loginBuild(LoginBuildRef ref,
+    {required String buildName, required String password}) async {
+  // final dio = Dio(options);
+  Map<String, dynamic> body = {
+    "buildingName": buildName,
+    "password": password,
+  };
+  Response response = await dio.post(
+    '$baseUrl/buildings/login',
+    data: json.encode(body),
+    options: Options(
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    ),
+  );
+
+  if (kDebugMode) {
+
+  }
+  if (response.statusCode == 200) {
+    LocalStorageService.saveBuildingName(buildName);
+    LocalStorageService.setAuthStatus(true);
+    ref.read(isAuth.notifier).state = true;
+
+    final checkAuth = ref.watch(isAuth);
+    if (kDebugMode) {
+      print("This is status : $checkAuth");
     }
-  } catch (e) {
-    print(e);
-    rethrow;
+  }
+   else {
+    ref.read(isAuth.notifier).state = false;
   }
 }
 
 @riverpod
 Future<Response> logoutBuild(LogoutBuildRef ref) async {
   try {
-    final login = await dio.post('$baseUrl/buildings/login',
-        data: jsonEncode({'buildingName': "Vasant Vihar", 'password': "21312"}),
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        ));
-    return login.data;
+    final logout = await dio.post(
+      '$baseUrl/buildings/login',
+      data: jsonEncode({'buildingName': "Vasant Vihar", 'password': "21312"}),
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ),
+    );
+    return logout.data;
   } catch (e) {
     print(e);
     rethrow;
@@ -158,6 +151,4 @@ Future removeCars(RemoveCarsRef ref, String carId) async {
     "$baseUrl/buildings/$buildingId/cars/$carId",
     // data: {'carNumber': '$carNumber', 'isCar': '$isCar'},
   );
-  print("Car removed : ");
-  print(removeCar.data);
 }

@@ -9,11 +9,18 @@ class LocalStorageService {
     await prefs()!.setString('buildingId', buildingId);
   }
 
+  static Future<void> setAuthStatus(bool isAuth) async {
+    await prefs()!.setBool('isAuth', isAuth);
+  }
+
   static String getSelectedBuilding() {
     return prefs()!.getString('buildingName') ?? "";
   }
   static String getSelectedId() {
     return prefs()!.getString('buildingId') ?? "";
+  }
+  static bool getAuthStatus() {
+    return prefs()!.getBool('isAuth') ?? false;
   }
 
   static Future<bool> removeSelectedBuilding() {
@@ -22,6 +29,10 @@ class LocalStorageService {
 
   static Future<bool> removeSelectedId() {
     return prefs()!.remove('buildingId');
+  }
+
+  static Future<bool> removeAuthStatus() {
+    return prefs()!.remove('isAuth');
   }
 
   static Future<void> clear() {

@@ -108,14 +108,7 @@ class _CheckPlateState extends ConsumerState<CheckPlate> {
                   style: TextStyle(fontSize: 20),
                 )),
                 Container(
-                  // height: 400,
-                  // width: 350,
-                  // decoration: BoxDecoration(
-                  //   borderRadius: BorderRadius.circular(20),
-                  //   border: Border.all(
-                  //     width: 0,
-                  //   ),
-                  // ),
+
                   child: ScalableOCR(
                     paintboxCustom: Paint()
                       ..style = PaintingStyle.stroke

@@ -39,7 +39,7 @@ class _UserRegistrationState extends ConsumerState<UserRegistration> {
                   child: Image.asset("assets/Logo.jpg"),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 13,
                 ),
                 Container(
                   height: 30,

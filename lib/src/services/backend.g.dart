@@ -21,7 +21,7 @@ final getAllBuildProvider =
 );
 
 typedef GetAllBuildRef = AutoDisposeFutureProviderRef<List<BuildingModel>>;
-String _$registerBuildHash() => r'04ac8df1fcb11a66c7e13e3458bbeda7a377a918';
+String _$registerBuildHash() => r'dc10da53af34e6015fe3f264ec61305e2fa31e59';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -203,27 +203,25 @@ class _RegisterBuildProviderElement
   BuildContext get context => (origin as RegisterBuildProvider).context;
 }
 
-String _$loginBuildHash() => r'da03614482465ca2f80047455e32231ac97f2b6f';
+String _$loginBuildHash() => r'dfca2de6459c15d92539890ad037dfb77d56d409';
 
 /// See also [loginBuild].
 @ProviderFor(loginBuild)
 const loginBuildProvider = LoginBuildFamily();
 
 /// See also [loginBuild].
-class LoginBuildFamily extends Family<AsyncValue<bool>> {
+class LoginBuildFamily extends Family<AsyncValue<void>> {
   /// See also [loginBuild].
   const LoginBuildFamily();
 
   /// See also [loginBuild].
-  LoginBuildProvider call(
-    String buildName,
-    String password,
-    BuildContext context,
-  ) {
+  LoginBuildProvider call({
+    required String buildName,
+    required String password,
+  }) {
     return LoginBuildProvider(
-      buildName,
-      password,
-      context,
+      buildName: buildName,
+      password: password,
     );
   }
 
@@ -232,9 +230,8 @@ class LoginBuildFamily extends Family<AsyncValue<bool>> {
     covariant LoginBuildProvider provider,
   ) {
     return call(
-      provider.buildName,
-      provider.password,
-      provider.context,
+      buildName: provider.buildName,
+      password: provider.password,
     );
   }
 
@@ -254,18 +251,16 @@ class LoginBuildFamily extends Family<AsyncValue<bool>> {
 }
 
 /// See also [loginBuild].
-class LoginBuildProvider extends AutoDisposeFutureProvider<bool> {
+class LoginBuildProvider extends AutoDisposeFutureProvider<void> {
   /// See also [loginBuild].
-  LoginBuildProvider(
-    String buildName,
-    String password,
-    BuildContext context,
-  ) : this._internal(
+  LoginBuildProvider({
+    required String buildName,
+    required String password,
+  }) : this._internal(
           (ref) => loginBuild(
             ref as LoginBuildRef,
-            buildName,
-            password,
-            context,
+            buildName: buildName,
+            password: password,
           ),
           from: loginBuildProvider,
           name: r'loginBuildProvider',
@@ -278,7 +273,6 @@ class LoginBuildProvider extends AutoDisposeFutureProvider<bool> {
               LoginBuildFamily._allTransitiveDependencies,
           buildName: buildName,
           password: password,
-          context: context,
         );
 
   LoginBuildProvider._internal(
@@ -290,16 +284,14 @@ class LoginBuildProvider extends AutoDisposeFutureProvider<bool> {
     required super.from,
     required this.buildName,
     required this.password,
-    required this.context,
   }) : super.internal();
 
   final String buildName;
   final String password;
-  final BuildContext context;
 
   @override
   Override overrideWith(
-    FutureOr<bool> Function(LoginBuildRef provider) create,
+    FutureOr<void> Function(LoginBuildRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -312,13 +304,12 @@ class LoginBuildProvider extends AutoDisposeFutureProvider<bool> {
         debugGetCreateSourceHash: null,
         buildName: buildName,
         password: password,
-        context: context,
       ),
     );
   }
 
   @override
-  AutoDisposeFutureProviderElement<bool> createElement() {
+  AutoDisposeFutureProviderElement<void> createElement() {
     return _LoginBuildProviderElement(this);
   }
 
@@ -326,8 +317,7 @@ class LoginBuildProvider extends AutoDisposeFutureProvider<bool> {
   bool operator ==(Object other) {
     return other is LoginBuildProvider &&
         other.buildName == buildName &&
-        other.password == password &&
-        other.context == context;
+        other.password == password;
   }
 
   @override
@@ -335,24 +325,20 @@ class LoginBuildProvider extends AutoDisposeFutureProvider<bool> {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, buildName.hashCode);
     hash = _SystemHash.combine(hash, password.hashCode);
-    hash = _SystemHash.combine(hash, context.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin LoginBuildRef on AutoDisposeFutureProviderRef<bool> {
+mixin LoginBuildRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `buildName` of this provider.
   String get buildName;
 
   /// The parameter `password` of this provider.
   String get password;
-
-  /// The parameter `context` of this provider.
-  BuildContext get context;
 }
 
-class _LoginBuildProviderElement extends AutoDisposeFutureProviderElement<bool>
+class _LoginBuildProviderElement extends AutoDisposeFutureProviderElement<void>
     with LoginBuildRef {
   _LoginBuildProviderElement(super.provider);
 
@@ -360,8 +346,6 @@ class _LoginBuildProviderElement extends AutoDisposeFutureProviderElement<bool>
   String get buildName => (origin as LoginBuildProvider).buildName;
   @override
   String get password => (origin as LoginBuildProvider).password;
-  @override
-  BuildContext get context => (origin as LoginBuildProvider).context;
 }
 
 String _$logoutBuildHash() => r'3eb75387c52d7cad9e338b89ec3482af03655273';

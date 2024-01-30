@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vehiscan/src/models/building_model.dart';
 import 'package:vehiscan/src/screens/admin_record.dart/admin_records.dart';
+import 'package:vehiscan/src/screens/admin_record.dart/records_screen.dart';
 
 import '../../services/backend.dart';
 import '../../services/local_storage.dart';
@@ -17,16 +19,14 @@ class AdminLogin extends ConsumerStatefulWidget {
 }
 
 class _AdminLoginState extends ConsumerState<AdminLogin> {
+  final passwordController = TextEditingController();
   bool selectBuild = false;
-  
-  Widget build(BuildContext context) {
-    @override
-    void initState() {
-      super.initState();
-    }
 
+  Widget build(BuildContext context) {
     final buildings = ref.watch(getAllBuildProvider);
     final selectedBuilding = LocalStorageService.getSelectedBuilding();
+    // final isLogin = ref.watch(loginBuildProvider(
+    //     buildName: selectedBuilding, password: passwordController.text));
     if (selectedBuilding.isEmpty) {
       selectBuild = false;
     } else {
@@ -34,11 +34,11 @@ class _AdminLoginState extends ConsumerState<AdminLogin> {
     }
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      key: _scaffoldKey,
+        key: _scaffoldKey,
         appBar: const AppBarWidget(lead: false),
         endDrawer: NavDrawer(),
         body: Container(
-          height: double.maxFinite,
+          height: double.infinity,
           width: double.maxFinite,
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,9 +50,9 @@ class _AdminLoginState extends ConsumerState<AdminLogin> {
                 Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Image.asset("assets/Logo.jpg")),
-                const SizedBox(
-                  height: 20,
-                ),
+                // const SizedBox(
+                //   height: 20,
+                // ),
                 // Container(
                 //   width: 260,
                 //   child: Padding(
@@ -218,12 +218,13 @@ class _AdminLoginState extends ConsumerState<AdminLogin> {
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 15.5,
                 ),
                 Container(
                   height: 30,
                   width: 250,
-                  child: const TextField(
+                  child: TextField(
+                    controller: passwordController,
                     cursorColor: Colors.black54,
                     textAlign: TextAlign.left,
                     obscureText: true,
@@ -246,17 +247,61 @@ class _AdminLoginState extends ConsumerState<AdminLogin> {
                   ),
                 ),
                 const SizedBox(
-                  height: 36,
+                  height: 20,
                 ),
                 Directionality(
                   textDirection: TextDirection.rtl,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => AdminRecords(),
-                        ),
-                      );
+                      if (selectedBuilding.isNotEmpty ||
+                          passwordController.text.isNotEmpty) {
+                        final isLoginWatch = ref.read(
+                          loginBuildProvider(
+                            buildName: selectedBuilding,
+                            password: passwordController.text,
+                          ),
+                        );
+                        final authLocal = LocalStorageService.getAuthStatus();
+                        final checkAuth = ref.watch(isAuth);
+
+                        print(checkAuth);
+                        if (checkAuth) {
+                          Fluttertoast.showToast(
+                            msg: "Login Successful",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return AdminRecords();
+                          }));
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: "Incorrent Credentials, try again ",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                        }
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: "Enter credentials ",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      }
                     },
                     icon: const Icon(
                       IconlyLight.login,

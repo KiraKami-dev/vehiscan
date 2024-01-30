@@ -27,21 +27,11 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool selectBuild = false;
-  
-  Widget build(BuildContext context) {
-    @override
-    void initState() {
-      super.initState();
-    }
 
-    
-
-    // final buildingsReg = ref.watch(registerBuildProvider);
-    // final buildingLogin = ref.watch(loginBuildProvider);
+  @override
+  Widget build(BuildContext context) {    
     final buildings = ref.watch(getAllBuildProvider);
     final getAllCars = ref.watch(carsByIdProvider);
-    // final addCar = ref.watch(addCarsProvider);
-    // final removeCar = ref.watch(removeCarsProvider);
     final selectedBuilding = LocalStorageService.getSelectedBuilding();
     if (selectedBuilding.isEmpty) {
       selectBuild = false;
@@ -53,8 +43,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: const AppBarWidget(lead: false),
-      endDrawer: NavDrawer(),
-      body: Container(
+      endDrawer: const NavDrawer(),
+      body: SizedBox(
         width: double.maxFinite,
         height: double.maxFinite,
         child: Column(
@@ -146,11 +136,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   },
                   error: (error, stackTrace) =>
                       Text('Error: $error $stackTrace'),
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             // Spacer(flex: 1,),
@@ -160,13 +151,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onPressed: () {
                   if (!selectBuild) {
                     Fluttertoast.showToast(
-                        msg: "Select building first!",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0);
+                      msg: "Select building first!",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
                   } else {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -175,7 +167,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     );
                   }
                 },
-                icon: Icon(
+                icon: const Icon(
                   IconlyBold.scan,
                   color: Colors.white70,
                 ),
@@ -190,7 +182,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-            Spacer(
+            const Spacer(
               flex: 1,
             ),
           ],
