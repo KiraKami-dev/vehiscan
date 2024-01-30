@@ -12,9 +12,6 @@ import 'local_storage.dart';
 part 'backend.g.dart';
 
 final dio = Dio();
-// const ipAddress = "13.233.186.190";
-
-// const baseUrl = "http://$ipAddress:8000/api";
 final baseUrl = dotenv.env['AWS_URL'];
 
 void showSnackBar(BuildContext context, String text, bool success) {
